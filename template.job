@@ -1,0 +1,11 @@
+#!/bin/bash --login
+
+# PBS job options (name, compute nodes, job time)
+#PBS -N SeqQC
+#PBS -l select={}
+#PBS -l walltime={}
+#PBS -A w68
+
+# Change to the directory that the job was submitted from
+cd $PBS_O_WORKDIR
+{}
