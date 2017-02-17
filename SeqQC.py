@@ -55,15 +55,15 @@ def get_threads(args):
 
 def run_fqc(args):
 
-    command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(args.outdir,
+    command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(args.fqcdir,
                              args.tmpdir, args.threads, ' '.join(args.files))
 
     cmdargs = shlex.split(command)
     print(command)
     print(cmdargs)
 
-    #p = sp.Popen(cmdargs)
-    p = sp.Popen('date')
+    p = sp.Popen(cmdargs)
+    #p = sp.Popen('date')
 
     return p
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     args = parse_command_line()
     print(args)
-    #make_dirs(args)
+    make_paths(args)
     args.files = get_files(args)
     args.threads = get_threads(args)
     print(args.files)
