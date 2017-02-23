@@ -1,17 +1,18 @@
 import glob
-import subprocess as sp
 import datetime
-import shlex
 import os
 import argparse
+import runFastQC as fqc
 
 def parse_command_line():
-
+    '''
+    Parser of command line arguments for SeqQC.py
+    '''
     description = ("This script performs the Sequence Quality Control step "
                     "of the Cancer Genome Variant pipeline.")
 
     parser = argparse.ArgumentParser(
-        description = description,
+        description=description,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("-i", "--indir", default='',
@@ -32,39 +33,38 @@ def parse_command_line():
     return parser.parse_args()
 
 def make_paths(args):
+    '''
+    Create paths required for first run of SeqQC pipeline
+    '''
     args.tmpdir = "{0}/tmp".format(args.outdir)
-    args.fqcdir = "{0}/FastQC_out".format(args.outdir)
-    args.trimdir = "{0}/Trim_out".format(args.outdir)
+    args.fqcdir = "{0}/FastQC_out/first".format(args.outdir)
+    args.trimdir = "{0}/Trim_out/first".format(args.outdir)
     for dirpath in [args.tmpdir, args.fqcdir, args.trimdir]:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
     return args
 
 def get_files(args):
+    '''
+    Search for and return list of files to pass through SeqQC pipeline
+    '''
     if not args.files:
         infiles = glob.glob('{0}/*fastq*'.format(args.indir))
         return infiles
-    else: return args.files
+    else:
+        ### MAKE SURE NAMED FILES EXISTs
+        return args.files
+
 
 def get_threads(args):
+    '''
+    Find number of threads, either from argparse or number of files.
+    '''
     if args.threads == 0:
         print(len(args.files))
         return len(args.files)
     else: return args.threads
 
-def run_fqc(args):
-
-    command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(args.fqcdir,
-                             args.tmpdir, args.threads, ' '.join(args.files))
-
-    cmdargs = shlex.split(command)
-    print(command)
-    print(cmdargs)
-
-    p = sp.Popen(cmdargs)
-    #p = sp.Popen('date')
-
-    return p
 
 if __name__ == "__main__":
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     print(args.threads)
     print(args)
     startfqc = datetime.datetime.now()
-    p = run_fqc(args)
+    p = fqc.run_fqc(args)
     p.wait()
     endfqc = datetime.datetime.now()
     print(endfqc-startfqc)
