@@ -46,10 +46,9 @@ def get_files(args):
         return infiles
     else: return args.files
 
-
 def get_threads(args):
     if args.threads == 0:
-        print len(args.files)
+        print(len(args.files))
         return len(args.files)
     else: return args.threads
 

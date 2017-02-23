@@ -39,13 +39,14 @@ def parse_command_line():
                         "directory.")
 
     return parser.parse_args()
+    
 
 def make_command(args):
     args.command = "python {0}/SeqQC.py -o {1} -t {2} -f {3} ".format(sys.path[0], 
                                     args.outdir, args.threads, ' '.join(args.files))
 
 def write_job(args):
-    with open(os.path.join(sys.path[0], 'template.job'),'r') as f:
+    with open(os.path.join(sys.path[0], 'template.job'), 'r') as f:
         job = f.read().format(args.threads,args.walltime,args.outdir,args.command)
     args.jobfile = "{0}/SeqQC.job".format(args.outdir)
     with open(args.jobfile,'w') as fo:
