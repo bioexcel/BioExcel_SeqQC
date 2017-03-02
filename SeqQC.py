@@ -1,3 +1,9 @@
+"""
+This script performs the Sequence Quality Control step of the Cancer
+Genome Variant pipeline. The script controls the processes and
+decision making for each step.
+"""
+
 import glob
 import datetime
 import os
@@ -5,9 +11,9 @@ import argparse
 import runFastQC as fqc
 
 def parse_command_line():
-    '''
+    """
     Parser of command line arguments for SeqQC.py
-    '''
+    """
     description = ("This script performs the Sequence Quality Control step "
                     "of the Cancer Genome Variant pipeline.")
 
@@ -33,9 +39,9 @@ def parse_command_line():
     return parser.parse_args()
 
 def make_paths(arglist):
-    '''
+    """
     Create paths required for first run of SeqQC pipeline
-    '''
+    """
     arglist.tmpdir = "{0}/tmp".format(arglist.outdir)
     arglist.fqcdir = "{0}/FastQC_out/first".format(arglist.outdir)
     arglist.trimdir = "{0}/Trim_out/first".format(arglist.outdir)
@@ -45,9 +51,9 @@ def make_paths(arglist):
     return arglist
 
 def get_files(arglist):
-    '''
+    """
     Search for and return list of files to pass through SeqQC pipeline
-    '''
+    """
     if not arglist.files:
         infiles = glob.glob('{0}/*fastq*'.format(arglist.indir))
         return infiles
@@ -57,9 +63,9 @@ def get_files(arglist):
 
 
 def get_threads(arglist):
-    '''
+    """
     Find number of threads, either from argparse or number of files.
-    '''
+    """
     if arglist.threads == 0:
         print(len(arglist.files))
         return len(arglist.files)

@@ -1,13 +1,17 @@
+"""
+This script runs the FastQC step of SeqQC. The script opens a
+process with the correct parameters.
+"""
+
 import shlex
 import subprocess as sp
 import argparse
 
 def parse_command_line():
-    '''
+    """
     Parser of command line arguments for SeqQC.py
-    '''
-    description = ("This script performs the Sequence Quality Control step "
-                    "of the Cancer Genome Variant pipeline.")
+    """
+    description = ("This script runs the FastQC step of SeqQC")
 
     parser = argparse.ArgumentParser(
         description=description,
@@ -31,9 +35,9 @@ def parse_command_line():
     return parser.parse_args()
 
 def run_fqc(arglist):
-    '''
+    """
     Create and run subprocess for fastqc
-    '''
+    """
     command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(arglist.fqcdir,
                              arglist.tmpdir, arglist.threads, ' '.join(arglist.files))
 
@@ -47,9 +51,9 @@ def run_fqc(arglist):
     return p
 
 def main(arglist):
-    '''
+    """
     Main function to run standalone FastQC instance
-    '''
+    """
     print("Hello!")
     print(arglist)
     run_fqc(args)
