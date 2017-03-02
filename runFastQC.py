@@ -30,10 +30,12 @@ def parse_command_line():
 
     return parser.parse_args()
 
-def run_fqc(args):
-
-    command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(args.fqcdir,
-                             args.tmpdir, args.threads, ' '.join(args.files))
+def run_fqc(arglist):
+    '''
+    Create and run subprocess for fastqc
+    '''
+    command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(arglist.fqcdir,
+                             arglist.tmpdir, arglist.threads, ' '.join(arglist.files))
 
     cmdargs = shlex.split(command)
     print(command)
@@ -44,11 +46,13 @@ def run_fqc(args):
 
     return p
 
-def main(args):
+def main(arglist):
     '''
     Main function to run standalone FastQC instance
     '''
     print("Hello!")
+    print(arglist)
+    run_fqc(args)
 
 if __name__ == "__main__":
 
