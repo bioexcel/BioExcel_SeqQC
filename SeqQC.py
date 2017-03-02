@@ -1,6 +1,6 @@
 """
 This script performs the Sequence Quality Control step of the Cancer
-Genome Variant pipeline. The script controls the processes and
+Genome Variant pipeline, controlling the processes and
 decision making for each step.
 """
 
