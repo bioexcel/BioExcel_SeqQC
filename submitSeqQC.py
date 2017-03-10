@@ -13,10 +13,6 @@ import datetime as dt
 
 import SeqQC
 
-class MyFormatter(argparse.HelpFormatter):
-    """Class for creating tidier help printout"""
-    def __init__(self, prog):
-        super(MyFormatter, self).__init__(prog, max_help_position=37)
 
 def parse_command_line():
     """
@@ -28,8 +24,7 @@ def parse_command_line():
 
     parser = argparse.ArgumentParser(
         description=description,
-        formatter_class=MyFormatter)
-        #formatter_class = argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("-o", "--outdir", default='./',
                         help="Output directory")
@@ -56,8 +51,8 @@ def get_submit_time():
     if output jobname is not provided.
     """
     dtnow = dt.datetime.now()
-    subtime = "{}{:02d}{:02d}_{:02d}{:02d}{:02d}".format(dtnow.year, dtnow.month,
-                dtnow.day, dtnow.hour, dtnow.minute, dtnow.second)
+    subtime = "{}{:02d}{:02d}_{:02d}{:02d}{:02d}".format(dtnow.year,
+                dtnow.month, dtnow.day, dtnow.hour, dtnow.minute, dtnow.second)
 
     return subtime
 

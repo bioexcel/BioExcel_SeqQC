@@ -39,7 +39,8 @@ def run_fqc(arglist):
     Create and run subprocess for fastqc
     """
     command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(arglist.fqcdir,
-                             arglist.tmpdir, arglist.threads, ' '.join(arglist.files))
+                             arglist.tmpdir, arglist.threads,
+                             ' '.join(arglist.files))
 
     cmdargs = shlex.split(command)
     print(command)
@@ -56,7 +57,7 @@ def main(arglist):
     """
     print("Hello!")
     print(arglist)
-    run_fqc(args)
+    #run_fqc(args)
 
 if __name__ == "__main__":
 

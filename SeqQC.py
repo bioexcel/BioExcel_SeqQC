@@ -8,7 +8,9 @@ import glob
 import datetime
 import os
 import argparse
-import runFastQC as fqc
+import runFastQC as rfqc
+import checkFastQC as cfqc
+import runTrim as rt
 
 def parse_command_line():
     """
@@ -82,8 +84,19 @@ if __name__ == "__main__":
     print(args.files)
     print(args.threads)
     print(args)
-    startfqc = datetime.datetime.now()
-    p = fqc.run_fqc(args)
+
+    ### Run FastQC
+    startrfqc = datetime.datetime.now()
+    p = rfqc.run_fqc(args)
     p.wait()
-    endfqc = datetime.datetime.now()
-    print(endfqc-startfqc)
+    endrfqc = datetime.datetime.now()
+    print(endrfqc-startrfqc)
+
+    ### Run Adapter Trimming
+    args = rt.trimadapt(args)
+
+    ### Check FastQC output
+    args = cfqc.check_qc(args)
+
+    ### Run Quality Trimming
+    args = rt.trimQC(args)
