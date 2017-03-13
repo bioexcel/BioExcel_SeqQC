@@ -12,6 +12,23 @@ import runFastQC as rfqc
 import checkFastQC as cfqc
 import runTrim as rt
 
+# def class SeqQCRunner(object):
+#     def __init__ (self, infile, args):
+#         adaptrim = False
+#         qctrim = False
+
+#     def run_fastqc(self):
+#         pass
+
+#     def run_qctrim(self):
+#         pass
+
+#     def run_adaptrim(self):
+#         pass
+
+#     def check_qc(self):
+#         pass
+
 def parse_command_line():
     """
     Parser of command line arguments for SeqQC.py
@@ -60,8 +77,9 @@ def get_files(arglist):
         infiles = glob.glob('{0}/*fastq*'.format(arglist.indir))
         return infiles
     else:
-        ### MAKE SURE NAMED FILES EXISTs
+        ### MAKE SURE NAMED FILES EXIST
         return arglist.files
+
 
 
 def get_threads(arglist):
@@ -93,10 +111,12 @@ if __name__ == "__main__":
     print(endrfqc-startrfqc)
 
     ### Run Adapter Trimming
-    args = rt.trimadapt(args)
-
+    p = rt.trimadapt(args)
+    p.wait()
     ### Check FastQC output
-    args = cfqc.check_qc(args)
+    qcpass = cfqc.check_qc(args)
 
     ### Run Quality Trimming
-    args = rt.trimQC(args)
+    if not qcpass:
+        p = rt.trimQC(args)
+        p.wait()

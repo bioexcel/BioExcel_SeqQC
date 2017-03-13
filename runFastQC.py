@@ -1,6 +1,6 @@
 """
 This script runs the FastQC step of SeqQC. The script opens a
-process with the correct parameters.
+FastQC process with the correct parameters.
 """
 
 import shlex

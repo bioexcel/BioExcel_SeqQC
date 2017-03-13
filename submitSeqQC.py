@@ -59,7 +59,7 @@ def get_submit_time():
 def make_command(arglist):
     """
     Creates the full python command to launch SeqQC.py, including
-    command line options.
+    command line options, to be added to job file.
     """
     arglist.command = "python {0}/SeqQC.py -o {1} -t {2} -f {3} ".format(
                             sys.path[0], arglist.outdir, arglist.threads,
@@ -87,7 +87,6 @@ def submit_job(arglist):
 
     cmdargs = shlex.split(cmdstr)
     print(cmdstr)
-    #print(cmdargs)
 
     sp.Popen(cmdargs)
     sp.Popen('date')
