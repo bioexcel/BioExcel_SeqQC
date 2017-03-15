@@ -12,7 +12,7 @@ import runFastQC as rfqc
 import checkFastQC as cfqc
 import runTrim as rt
 
-# def class SeqQCRunner(object):
+# class SeqQCRunner(object):
 #     def __init__ (self, infile, args):
 #         adaptrim = False
 #         qctrim = False
