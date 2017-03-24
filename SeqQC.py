@@ -54,6 +54,9 @@ def parse_command_line():
                         help="Number of threads for FastQC use. Normal use: "
                         "Number of threads = number of files. Default 0 for "
                         "automatic calculation.")
+    parser.add_argument("-a", "--adaptseq", type=str, default='',
+                        help="The adapter sequence to be trimmed from the "
+                        "FastQ file.")
 
     return parser.parse_args()
 
@@ -62,8 +65,9 @@ def make_paths(arglist):
     Create paths required for first run of SeqQC pipeline
     """
     arglist.tmpdir = "{0}/tmp".format(arglist.outdir)
-    arglist.fqcdir = "{0}/FastQC_out/first".format(arglist.outdir)
-    arglist.trimdir = "{0}/Trim_out/first".format(arglist.outdir)
+    arglist.fqcdir1 = "{0}/FastQC_out/1stpass".format(arglist.outdir)
+    arglist.fqcdir2 = "{0}/FastQC_out/2ndpass".format(arglist.outdir)
+    arglist.trimdir = "{0}/Trim_out".format(arglist.outdir)
     for dirpath in [arglist.tmpdir, arglist.fqcdir, arglist.trimdir]:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
@@ -105,18 +109,28 @@ if __name__ == "__main__":
 
     ### Run FastQC
     startrfqc = datetime.datetime.now()
-    p = rfqc.run_fqc(args)
-    p.wait()
+    pfqc = rfqc.run_fqc(args, args.fqcdir1)
+    pfqc.wait()
     endrfqc = datetime.datetime.now()
     print(endrfqc-startrfqc)
 
     ### Run Adapter Trimming
-    p = rt.trimadapt(args)
-    p.wait()
-    ### Check FastQC output
-    qcpass = cfqc.check_qc(args)
+    ptrima = rt.trimadapt(args)
+    ptrima.wait()
+    ### Check FastQC output, simple yes/no to quality trimming
+    qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, 1)
 
     ### Run Quality Trimming
-    if not qcpass:
-        p = rt.trimQC(args)
-        p.wait()
+    if qcpass and retrim:
+        ptrimqc = rt.trimQC(args)
+        ptrimqc.wait()
+
+        if recheck:
+            pfqc = rfqc.run_fqc(args, args.fqcdir2)
+            pfqc.wait()
+            qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, 2)
+
+            if qcpass:
+                print "Done successfully"
+            else:
+                print "Needs manual check because blah..."

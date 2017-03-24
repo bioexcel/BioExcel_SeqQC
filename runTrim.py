@@ -5,35 +5,38 @@ cutadapt process with the correct parameters.
 
 import shlex
 import subprocess as sp
-import argparse
+import SeqQC
 
 
-def parse_command_line():
-    """
-    Parser of command line arguments for SeqQC.py
-    """
-    description = ("This script runs the FastQC step of SeqQC")
+# def parse_command_line():
+#     """
+#     Parser of command line arguments for SeqQC.py
+#     """
+#     description = ("This script runs the FastQC step of SeqQC")
 
-    parser = argparse.ArgumentParser(
-        description=description,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+#     parser = argparse.ArgumentParser(
+#         description=description,
+#         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("-i", "--indir", default='',
-                        help="Directory containing input FastQ files to scan "
-                        "(ignored if -f/--files flag is prsent)")
-    parser.add_argument("-f", "--files", nargs='*',
-                        help="Flag to pass individual files rather than input "
-                        "directory.")
-    parser.add_argument("-o", "--outdir", default='',
-                        help="Output directory")
-    parser.add_argument("--tmpdir", default='',
-                        help="Temp directory")
-    parser.add_argument("-t", "--threads", type=int, default='0',
-                        help="Number of threads for FastQC use. Normal use: "
-                        "Number of threads = number of files. Default 0 for "
-                        "automatic calculation.")
+#     parser.add_argument("-i", "--indir", default='',
+#                         help="Directory containing input FastQ files to scan "
+#                         "(ignored if -f/--files flag is prsent)")
+#     parser.add_argument("-f", "--files", nargs='*',
+#                         help="Flag to pass individual files rather than input "
+#                         "directory.")
+#     parser.add_argument("-o", "--outdir", default='',
+#                         help="Output directory")
+#     parser.add_argument("--tmpdir", default='',
+#                         help="Temp directory")
+#     parser.add_argument("-t", "--threads", type=int, default='0',
+#                         help="Number of threads for FastQC use. Normal use: "
+#                         "Number of threads = number of files. Default 0 for "
+#                         "automatic calculation.")                    
+#     parser.add_argument("-a", "--adaptseq", type=str, default='',
+#                         help="The adapter sequence to be trimmed from the "
+#                         "FastQ file.")
 
-    return parser.parse_args()
+#     return parser.parse_args()
 
 def trimadapt(arglist):
     """
@@ -93,5 +96,5 @@ def main(arglist):
 
 if __name__ == "__main__":
 
-    args = parse_command_line()
+    args = SeqQC.parse_command_line()
     main(args)
