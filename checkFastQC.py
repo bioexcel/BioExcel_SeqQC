@@ -114,7 +114,31 @@ def check_qc(arglist, outdir, passthrough):
         if qclist[4] == 'WARN' and passthrough == 1:
             retrim = True
             recheck = True## NEED TO FINISH
-
+        if qclist[4] == 'FAIL' and passthrough == 2:
+            qcpass = False
+        if qclist[5] != 'PASS':
+            qcpass = False
+        if qclist[6] != 'PASS':
+            qcpass = False
+        if qclist[7] != 'PASS' and passthrough == 1:
+            qcpass = False
+        if qclist[6] != 'PASS':
+            qcpass = False
+        if qclist[9] == 'WARN' and passthrough == 1:
+            retrim = True
+            recheck = True## NEED TO FINISH
+        if qclist[9] == 'FAIL' and passthrough == 2:
+            qcpass = False
+        if qclist[10] == 'WARN' and passthrough == 1:
+            retrim = True
+            recheck = True## NEED TO FINISH
+        if qclist[10] != 'PASS' and passthrough == 2:
+            qcpass = False
+        if qclist[11] == 'WARN' and passthrough == 1:
+            retrim = True
+            recheck = True## NEED TO FINISH
+        if qclist[11] == 'FAIL' and passthrough == 2:
+            qcpass = False
     return qcpass, retrim, recheck
 
 def main(arglist):

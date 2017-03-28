@@ -121,16 +121,20 @@ if __name__ == "__main__":
     qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, 1)
 
     ### Run Quality Trimming
-    if qcpass and retrim:
-        ptrimqc = rt.trimQC(args)
-        ptrimqc.wait()
+    if qcpass:
+        if retrim:
+            ptrimqc = rt.trimQC(args)
+            ptrimqc.wait()
 
         if recheck:
             pfqc = rfqc.run_fqc(args, args.fqcdir2)
             pfqc.wait()
             qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, 2)
 
-            if qcpass:
-                print "Done successfully"
-            else:
-                print "Needs manual check because blah..."
+        ##If qcpass is still true, then finished succesfully.
+        if qcpass:
+            print "Finished successfully"
+        else:
+            print "Needs manual check"
+    else:
+        print "Needs manual check"
