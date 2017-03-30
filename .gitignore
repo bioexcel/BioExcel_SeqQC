@@ -90,3 +90,6 @@ ENV/
 
 # VSCode files
 .vscode*
+
+# Mac specific files
+.DS_Store
