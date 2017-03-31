@@ -60,6 +60,6 @@ def main(arglist):
     #run_fqc(args)
 
 if __name__ == "__main__":
-
-    args = SeqQC.parse_command_line()
+    description = ("This script runs the FastQC step of SeqQC")
+    args = SeqQC.parse_command_line(description)
     main(args)

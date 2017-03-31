@@ -31,7 +31,7 @@ import SeqQC
 #     parser.add_argument("-t", "--threads", type=int, default='0',
 #                         help="Number of threads for FastQC use. Normal use: "
 #                         "Number of threads = number of files. Default 0 for "
-#                         "automatic calculation.")                    
+#                         "automatic calculation.")
 #     parser.add_argument("-a", "--adaptseq", type=str, default='',
 #                         help="The adapter sequence to be trimmed from the "
 #                         "FastQ file.")
@@ -75,8 +75,8 @@ def trimQC(arglist):
     out1 = "{0}/QCTrimmed1.fq".format(arglist.trimdir)
     out2 = "{0}/QCTrimmed2.fq".format(arglist.trimdir)
 
-    command = "cutadapt -q 20 -o {0} -p {1} {2} {3}".format(out1, out2, in1,
-                                                                            in2)
+    command = "cutadapt -q 20 -o {0} -p {1} {2} {3}".format(out1, out2,
+                                                        in1, in2)
 
     cmdargs = shlex.split(command)
     print(command)
@@ -95,6 +95,6 @@ def main(arglist):
     #run_fqc(args)
 
 if __name__ == "__main__":
-
-    args = SeqQC.parse_command_line()
+    description = ("This script runs the Trimming step of SeqQC")
+    args = SeqQC.parse_command_line(description)
     main(args)

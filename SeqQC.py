@@ -29,12 +29,12 @@ import runTrim as rt
 #     def check_qc(self):
 #         pass
 
-def parse_command_line():
+def parse_command_line(description=("This script performs the Sequence "
+                "Quality Control step of the Cancer Genome Variant pipeline.")):
     """
     Parser of command line arguments for SeqQC.py
     """
-    description = ("This script performs the Sequence Quality Control step "
-                    "of the Cancer Genome Variant pipeline.")
+
 
     parser = argparse.ArgumentParser(
         description=description,
@@ -48,8 +48,6 @@ def parse_command_line():
                         "directory.")
     parser.add_argument("-o", "--outdir", default='',
                         help="Output directory")
-    parser.add_argument("--tmpdir", default='',
-                        help="Temp directory")
     parser.add_argument("-t", "--threads", type=int, default='0',
                         help="Number of threads for FastQC use. Normal use: "
                         "Number of threads = number of files. Default 0 for "
@@ -57,7 +55,9 @@ def parse_command_line():
     parser.add_argument("-a", "--adaptseq", type=str, default='',
                         help="The adapter sequence to be trimmed from the "
                         "FastQ file.")
-
+    parser.add_argument("-w", "--walltime", default='02:00:00',
+                        help="Walltime for PBS submission script. Must be of "
+                        "the format hh:mm:ss.")
     return parser.parse_args()
 
 def make_paths(arglist):
@@ -81,7 +81,7 @@ def get_files(arglist):
         infiles = glob.glob('{0}/*fastq*'.format(arglist.indir))
         return infiles
     else:
-        ### MAKE SURE NAMED FILES EXIST
+        ### MAKE SURE NAMED FILES EXIST!!!
         return arglist.files
 
 
@@ -118,7 +118,8 @@ if __name__ == "__main__":
     ptrima = rt.trimadapt(args)
     ptrima.wait()
     ### Check FastQC output, simple yes/no to quality trimming
-    qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, 1)
+    passthrough = 1
+    qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, passthrough)
 
     ### Run Quality Trimming
     if qcpass:
@@ -129,7 +130,8 @@ if __name__ == "__main__":
         if recheck:
             pfqc = rfqc.run_fqc(args, args.fqcdir2)
             pfqc.wait()
-            qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, 2)
+            qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir,
+                                                            passthrough)
 
         ##If qcpass is still true, then finished succesfully.
         if qcpass:

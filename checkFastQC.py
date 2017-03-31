@@ -18,13 +18,13 @@ import SeqQC
 #         description=description,
 #         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-#     parser.add_argument("-i", "--indir", default='',
+#     parser.add_argument("-i", "--fqcdir", default='',
 #                         help="Directory containing input FastQ files to scan "
 #                         "(ignored if -f/--files flag is prsent)")
 #     parser.add_argument("-f", "--files", nargs='*',
 #                         help="Flag to pass individual files rather than input "
 #                         "directory.")
-#     parser.add_argument("-o", "--outdir", default='',
+#     parser.add_argument("-o", "--fqcdir", default='',
 #                         help="Output directory")
 #     parser.add_argument("--tmpdir", default='',
 #                         help="Temp directory")
@@ -51,7 +51,7 @@ import SeqQC
 #         Read in QC report for the file provided
 #         '''
 #         _, filename = os.path.split(self.infile)
-#         summaryfile = "{0}/{1}/summary.txt".format(outdir,
+#         summaryfile = "{0}/{1}/summary.txt".format(fqcdir,
 #                         filename.replace('.fastq.bz2', '_fastqc'))
 #         with open(summaryfile) as f:
 #             self.basic = f.readline.split()[0]
@@ -70,21 +70,21 @@ import SeqQC
 
 
 
-def readQCreports(arglist, outdir):
+def readQCreports(arglist, fqcdir):
     '''
     Read in QC reports for each of the files provided
     '''
     reports = []
     for filepath in arglist.files:
         _, filename = os.path.split(filepath)
-        summaryfile = "{0}/{1}/summary.txt".format(outdir,
+        summaryfile = "{0}/{1}/summary.txt".format(fqcdir,
                         filename.replace('.fastq.bz2', '_fastqc'))
         with open(summaryfile) as f:
             qcsumm = f.readlines()
         reports.append(qcsumm)
     return reports
 
-def check_qc(arglist, outdir, passthrough):
+def check_qc(arglist, fqcdir, passthrough):
     '''
     Check the QC reports for any pass/fails, and use these to decide
     whether to run a QC trim on the samples. True = Pass, False = Fail, trim
@@ -94,7 +94,8 @@ def check_qc(arglist, outdir, passthrough):
     qcpass = True
     retrim = False
     recheck = False
-    reports = readQCreports(arglist, outdir)
+    reports = readQCreports(arglist, fqcdir)
+    print "Hello?"
     for report in reports:
         qclist = []
         for line in report:
@@ -113,7 +114,7 @@ def check_qc(arglist, outdir, passthrough):
             qcpass = False
         if qclist[4] == 'WARN' and passthrough == 1:
             retrim = True
-            recheck = True## NEED TO FINISH
+            recheck = True
         if qclist[4] == 'FAIL' and passthrough == 2:
             qcpass = False
         if qclist[5] != 'PASS':
@@ -126,17 +127,17 @@ def check_qc(arglist, outdir, passthrough):
             qcpass = False
         if qclist[9] == 'WARN' and passthrough == 1:
             retrim = True
-            recheck = True## NEED TO FINISH
+            recheck = True
         if qclist[9] == 'FAIL' and passthrough == 2:
             qcpass = False
         if qclist[10] == 'WARN' and passthrough == 1:
             retrim = True
-            recheck = True## NEED TO FINISH
+            recheck = True
         if qclist[10] != 'PASS' and passthrough == 2:
             qcpass = False
         if qclist[11] == 'WARN' and passthrough == 1:
             retrim = True
-            recheck = True## NEED TO FINISH
+            recheck = True
         if qclist[11] == 'FAIL' and passthrough == 2:
             qcpass = False
     return qcpass, retrim, recheck
@@ -147,9 +148,11 @@ def main(arglist):
     """
     print("Hello!")
     print(arglist)
+    qcpass, retrim, recheck = check_qc(arglist, args.indir, 1)
+    print qcpass, retrim, recheck
     #run_fqc(args)
 
 if __name__ == "__main__":
-
-    args = SeqQC.parse_command_line()
+    description = ("This script checks FastQC output for PASS/WARN/FAIL values")
+    args = SeqQC.parse_command_line(description)
     main(args)

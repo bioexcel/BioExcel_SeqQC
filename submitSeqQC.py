@@ -6,7 +6,6 @@ folders and job submission scripts as needed
 
 import subprocess as sp
 import shlex
-import argparse
 import os
 import sys
 import datetime as dt
@@ -14,35 +13,33 @@ import datetime as dt
 import SeqQC
 
 
-def parse_command_line():
-    """
-    Parser of command line arguments for SeqQC.py
-    """
-    description = ("This script submits the job required to perform the "
-                    "Sequence Quality Control step of the Cancer Genome "
-                    "Variant pipeline.")
+# def parse_command_line():
+#     """
+#     Parser of command line arguments for SeqQC.py
+#     """
+#     description = ("This script submits the job required to perform the "
+#                     "Sequence Quality Control step of the Cancer Genome "
+#                     "Variant pipeline.")
 
-    parser = argparse.ArgumentParser(
-        description=description,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
-    parser.add_argument("-o", "--outdir", default='./',
-                        help="Output directory")
-    parser.add_argument("-t", "--threads", type=int, default='0',
-                        help="Number of threads for FastQC use. Normal use: "
-                        "no. of threads = no. of files. Default 0 for "
-                        "automatic calculation.")
-    parser.add_argument("-w", "--walltime", default='02:00:00',
-                        help="Walltime for PBS submission script. Must be of "
-                        "the format hh:mm:ss.")
-    parser.add_argument("-i", "--indir", default='./',
-                        help="Directory of input FastQ files to scan (ignored "
-                        "if -f/--files flag is present)")
-    parser.add_argument("-f", dest='files', nargs='*',
-                        help="Flag to pass individual files rather than input "
-                        "directory.")
-
-    return parser.parse_args()
+#     parser = argparse.ArgumentParser(
+#         description=description,
+#         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+#     parser.add_argument("-i", "--indir", default='./',
+#                         help="Directory of input FastQ files to scan (ignored "
+#                         "if -f/--files flag is present)")
+#     parser.add_argument("-f", dest='files', nargs='*',
+#                         help="Flag to pass individual files rather than input "
+#                         "directory.")
+#     parser.add_argument("-o", "--outdir", default='./',
+#                         help="Output directory")
+#     parser.add_argument("-t", "--threads", type=int, default='0',
+#                         help="Number of threads for FastQC use. Normal use: "
+#                         "no. of threads = no. of files. Default 0 for "
+#                         "automatic calculation.")
+#     parser.add_argument("-w", "--walltime", default='02:00:00',
+#                         help="Walltime for PBS submission script. Must be of "
+#                         "the format hh:mm:ss.")
+#     return parser.parse_args()
 
 
 def get_submit_time():
@@ -92,8 +89,10 @@ def submit_job(arglist):
     sp.Popen('date')
 
 if __name__ == "__main__":
-
-    args = parse_command_line()
+    description = ("This script submits the job required to perform the "
+                    "Sequence Quality Control step of the Cancer Genome "
+                    "Variant pipeline.")
+    args = SeqQC.parse_command_line(description)
     args = SeqQC.make_paths(args)
     args.files = SeqQC.get_files(args)
     args = make_command(args)
