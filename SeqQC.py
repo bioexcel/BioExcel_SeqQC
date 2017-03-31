@@ -68,7 +68,8 @@ def make_paths(arglist):
     arglist.fqcdir1 = "{0}/FastQC_out/1stpass".format(arglist.outdir)
     arglist.fqcdir2 = "{0}/FastQC_out/2ndpass".format(arglist.outdir)
     arglist.trimdir = "{0}/Trim_out".format(arglist.outdir)
-    for dirpath in [arglist.tmpdir, arglist.fqcdir, arglist.trimdir]:
+    for dirpath in [arglist.tmpdir, arglist.fqcdir1, arglist.fqcdir1,
+                                arglist.trimdir, arglist.outdir]:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
     return arglist
@@ -119,7 +120,7 @@ if __name__ == "__main__":
     ptrima.wait()
     ### Check FastQC output, simple yes/no to quality trimming
     passthrough = 1
-    qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir, passthrough)
+    qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir1, passthrough)
 
     ### Run Quality Trimming
     if qcpass:
@@ -130,7 +131,7 @@ if __name__ == "__main__":
         if recheck:
             pfqc = rfqc.run_fqc(args, args.fqcdir2)
             pfqc.wait()
-            qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir,
+            qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir2,
                                                             passthrough)
 
         ##If qcpass is still true, then finished succesfully.
