@@ -76,7 +76,7 @@ def make_paths(arglist):
     arglist.outdir = os.path.abspath(arglist.outdir)
     arglist.indir = os.path.abspath(arglist.indir)
 
-    for dirpath in [arglist.tmpdir, arglist.fqcdir1, arglist.fqcdir1,
+    for dirpath in [arglist.tmpdir, arglist.fqcdir1, arglist.fqcdir2,
                                 arglist.trimdir, arglist.outdir]:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
