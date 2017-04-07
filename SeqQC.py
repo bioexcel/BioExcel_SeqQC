@@ -58,16 +58,24 @@ def parse_command_line(description=("This script performs the Sequence "
     parser.add_argument("-w", "--walltime", default='02:00:00',
                         help="Walltime for PBS submission script. Must be of "
                         "the format hh:mm:ss.")
+    parser.add_argument("-d", "--dryrun", action="store_true",
+                        help="Run through stages without actually creating "
+                        "new processes.")
     return parser.parse_args()
 
 def make_paths(arglist):
     """
     Create paths required for first run of SeqQC pipeline
     """
-    arglist.tmpdir = "{0}/tmp".format(arglist.outdir)
-    arglist.fqcdir1 = "{0}/FastQC_out/1stpass".format(arglist.outdir)
-    arglist.fqcdir2 = "{0}/FastQC_out/2ndpass".format(arglist.outdir)
-    arglist.trimdir = "{0}/Trim_out".format(arglist.outdir)
+    arglist.tmpdir = os.path.abspath("{0}/tmp".format(arglist.outdir))
+    arglist.fqcdir1 = os.path.abspath("{0}/FastQC_out/1stpass".format(
+                                                            arglist.outdir))
+    arglist.fqcdir2 = os.path.abspath("{0}/FastQC_out/2ndpass".format(
+                                                            arglist.outdir))
+    arglist.trimdir = os.path.abspath("{0}/Trim_out".format(arglist.outdir))
+    arglist.outdir = os.path.abspath(arglist.outdir)
+    arglist.indir = os.path.abspath(arglist.indir)
+
     for dirpath in [arglist.tmpdir, arglist.fqcdir1, arglist.fqcdir1,
                                 arglist.trimdir, arglist.outdir]:
         if not os.path.exists(dirpath):
