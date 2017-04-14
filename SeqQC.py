@@ -7,6 +7,7 @@ decision making for each step.
 import glob
 import datetime
 import os
+import sys
 import argparse
 import runFastQC as rfqc
 import checkFastQC as cfqc
@@ -87,11 +88,17 @@ def get_files(arglist):
     Search for and return list of files to pass through SeqQC pipeline
     """
     if not arglist.files:
+        # arglist dirs already have abs paths, so don't need to expand
         infiles = glob.glob('{0}/*fastq*'.format(arglist.indir))
-        return infiles
     else:
-        ### MAKE SURE NAMED FILES EXIST!!!
-        return arglist.files
+        # make sure files exist
+        for checkfile in arglist.files:
+            if not os.path.isfile(checkfile):
+                print "{} does not exist. Exiting.".format(checkfile)
+                sys.exit()
+        # expand paths to files (now we know the all exist)
+        infiles = [os.path.abspath(x) for x in arglist.files]
+    return infiles
 
 
 
