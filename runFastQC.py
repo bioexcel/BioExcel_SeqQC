@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 This script runs the FastQC step of SeqQC. The script opens a
 FastQC process with the correct parameters.

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 This script performs the Sequence Quality Control step of the Cancer
 Genome Variant pipeline, controlling the processes and

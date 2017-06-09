@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 This script runs the Trim step of SeqQC. The script opens a
 cutadapt process with the correct parameters.

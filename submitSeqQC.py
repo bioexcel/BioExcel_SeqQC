@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 This script submits the job required to perform the Sequence Quality
 Control step of the Cancer Genome Variant pipeline, creating output
