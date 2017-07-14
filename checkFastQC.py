@@ -70,7 +70,7 @@ import argparse
 #         print self.infile
 
 
-def parse_command_line(description=("This script performs the Sequence "
+def parse_command_line(desc=("This script performs the Sequence "
                 "Quality Control step of the Cancer Genome Variant pipeline.")):
     """
     Parser of command line arguments for SeqQC.py
@@ -78,7 +78,7 @@ def parse_command_line(description=("This script performs the Sequence "
 
 
     parser = argparse.ArgumentParser(
-        description=description,
+        description=desc,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("-i", "--indir", default='',
@@ -118,6 +118,14 @@ def readQCreports(arglist, fqcdir):
         reports.append(qcsumm)
     return reports
 
+def printlog(qcpass, qtrim, recheck):
+    '''
+    Print things to a log file
+    '''
+    print qcpass, qtrim, recheck
+    # Pring things to a log file.
+    return
+
 def check_qc(arglist, fqcdir, passthrough):
     '''
     Check the QC reports for any pass/fails, and use these to decide
@@ -126,7 +134,8 @@ def check_qc(arglist, fqcdir, passthrough):
     '''
     #Default to assuming things are fine and dandy, change if not.
     qcpass = True
-    retrim = False
+    qtrim = False
+    atrim = False
     recheck = False
     reports = readQCreports(arglist, fqcdir)
     print "Hello?"
@@ -138,43 +147,53 @@ def check_qc(arglist, fqcdir, passthrough):
 
         if qclist[0] != 'PASS':
             qcpass = False
-        if qclist[1] == 'WARN':
-            retrim = True
-        if qclist[1] == 'FAIL':
-            qcpass = False
-        if qclist[2] == 'FAIL':
-            qcpass = False
+
+        if qclist[1] != 'PASS' and passthrough == 1:
+            qtrim = True
+
+        if qclist[2] != 'PASS' and passthrough == 1:
+            qtrim = True
+
         if qclist[3] != 'PASS':
             qcpass = False
-        if qclist[4] == 'WARN' and passthrough == 1:
-            retrim = True
+
+        if qclist[4] == 'FAIL' and passthrough == 1:
+            qtrim = True
             recheck = True
         if qclist[4] == 'FAIL' and passthrough == 2:
             qcpass = False
-        if qclist[5] != 'PASS':
+
+        if qclist[5] == 'FAIL':
             qcpass = False
+
         if qclist[6] != 'PASS':
             qcpass = False
+
         if qclist[7] != 'PASS' and passthrough == 1:
             qcpass = False
-        if qclist[6] != 'PASS':
+
+        if qclist[8] != 'PASS':
             qcpass = False
-        if qclist[9] == 'WARN' and passthrough == 1:
-            retrim = True
+
+        if qclist[9] != 'PASS' and passthrough == 1:
+            atrim = True
             recheck = True
         if qclist[9] == 'FAIL' and passthrough == 2:
             qcpass = False
-        if qclist[10] == 'WARN' and passthrough == 1:
-            retrim = True
+
+        if qclist[10] != 'PASS' and passthrough == 1:
+            atrim = True
             recheck = True
         if qclist[10] != 'PASS' and passthrough == 2:
             qcpass = False
-        if qclist[11] == 'WARN' and passthrough == 1:
-            retrim = True
+
+        if qclist[11] != 'PASS' and passthrough == 1:
+            qtrim = True
             recheck = True
         if qclist[11] == 'FAIL' and passthrough == 2:
             qcpass = False
-    return qcpass, retrim, recheck
+
+    return qcpass, qtrim, atrim, recheck
 
 def main(arglist):
     """
@@ -182,8 +201,8 @@ def main(arglist):
     """
     print("Hello!")
     print(arglist)
-    qcpass, retrim, recheck = check_qc(arglist, args.indir, 1)
-    print qcpass, retrim, recheck
+    qcpass, qtrim, atrim, recheck = check_qc(arglist, args.indir, 1)
+    print qcpass, qtrim, atrim, recheck
     #run_fqc(args)
 
 if __name__ == "__main__":

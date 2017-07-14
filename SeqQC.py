@@ -132,24 +132,26 @@ if __name__ == "__main__":
     endrfqc = datetime.datetime.now()
     print(endrfqc-startrfqc)
 
-    ### Run Adapter Trimming
-    ptrima = rt.trimadapt(args)
-    ptrima.wait()
     ### Check FastQC output, simple yes/no to quality trimming
     passthrough = 1
-    qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir1, passthrough)
+    qcpass, qtrim, atrim, recheck = cfqc.check_qc(args, args.fqcdir1, passthrough)
 
     ### Run Quality Trimming
     if qcpass:
-        if retrim:
+        if qtrim:
             ptrimqc = rt.trimQC(args)
             ptrimqc.wait()
+
+        if atrim:
+            ### Run Adapter Trimming
+            ptrima = rt.trimadapt(args)
+            ptrima.wait()
 
         if recheck:
             pfqc = rfqc.run_fqc(args, args.fqcdir2)
             pfqc.wait()
-            qcpass, retrim, recheck = cfqc.check_qc(args, args.fqcdir2,
-                                                            passthrough)
+            qcpass, qtrim, atrim, recheck = cfqc.check_qc(args, args.fqcdir2,
+                                                           passthrough)
 
         ##If qcpass is still true, then finished succesfully.
         if qcpass:
