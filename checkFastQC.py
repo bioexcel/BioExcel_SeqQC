@@ -104,15 +104,15 @@ def parse_command_line(desc=("This script performs the Sequence "
                         "new processes.")
     return parser.parse_args()
 
-def readQCreports(arglist, fqcdir):
+def readQCreports(arglist, fqcout):
     '''
     Read in QC reports for each of the files provided
     '''
     reports = []
-    for filepath in arglist.files:
-        _, filename = os.path.split(filepath)
-        summaryfile = "{0}/{1}/summary.txt".format(fqcdir,
-                        filename.replace('.fastq.bz2', '_fastqc'))
+    fqcdirs = [os.path.join(fqcout,o) for o in os.listdir(fqcout) if 
+                                os.path.isdir(os.path.join(fqcout,o))]
+    for fqcdir in fqcdirs:
+        summaryfile = "{0}/summary.txt".format(fqcdir)
         with open(summaryfile) as f:
             qcsumm = f.readlines()
         reports.append(qcsumm)
