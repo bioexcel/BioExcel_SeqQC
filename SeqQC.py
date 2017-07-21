@@ -55,11 +55,11 @@ def parse_command_line(description=("This script performs the Sequence "
                         help="Number of threads for FastQC use. Normal use: "
                         "Number of threads = number of files. Default 0 for "
                         "automatic calculation.")
-    parser.add_argument("-a", "--adaptseq", type=str,
+    parser.add_argument("-a", "--adaptseq", type=str, 
                         default='AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT',
                         help="The adapter sequence to be trimmed from the "
                         "FastQ file.")
-    parser.add_argument("-w", "--walltime", default='04:00:00',
+    parser.add_argument("-w", "--walltime", default='02:00:00',
                         help="Walltime for PBS submission script. Must be of "
                         "the format hh:mm:ss.")
     parser.add_argument("-d", "--dryrun", action="store_true",
