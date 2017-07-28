@@ -135,7 +135,7 @@ if __name__ == "__main__":
 
     ### Check FastQC output, simple yes/no to quality trimming
     passthrough = 1
-    qcpass, qtrim, atrim, recheck = cfqc.check_qc(args, args.fqcdir1,
+    qcpass, qtrim, atrim, recheck = cfqc.check_qc(args.fqcdir1,
                                                             passthrough)
 
     ### Run Quality Trimming
@@ -150,9 +150,10 @@ if __name__ == "__main__":
             ptrima.wait()
 
         if recheck:
+            passthrough = 2
             pfqc = rfqc.run_fqc(args, args.fqcdir2, [f1, f2])
             pfqc.wait()
-            qcpass, qtrim, atrim, recheck = cfqc.check_qc(args, args.fqcdir2,
+            qcpass, qtrim, atrim, recheck = cfqc.check_qc(args.fqcdir2,
                                                            passthrough)
 
         ##If qcpass is still true, then finished succesfully.
