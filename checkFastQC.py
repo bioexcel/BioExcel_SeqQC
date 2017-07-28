@@ -138,7 +138,7 @@ def check_qc(arglist, fqcdir, passthrough):
     atrim = False
     recheck = False
     reports = readQCreports(arglist, fqcdir)
-    print "Hello?"
+    #print "Hello?"
     for report in reports:
         qclist = []
         for line in report:

@@ -157,7 +157,11 @@ if __name__ == "__main__":
         ##If qcpass is still true, then finished succesfully.
         if qcpass:
             print "Finished successfully"
+			print qcpass, qtrim, atrim, recheck
+
         else:
             print "Needs manual check"
+			print qcpass, qtrim, atrim, recheck
     else:
         print "Needs manual check"
+		print qcpass, qtrim, atrim, recheck
