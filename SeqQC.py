@@ -55,7 +55,7 @@ def parse_command_line(description=("This script performs the Sequence "
                         help="Number of threads for FastQC use. Normal use: "
                         "Number of threads = number of files. Default 0 for "
                         "automatic calculation.")
-    parser.add_argument("-a", "--adaptseq", type=str, 
+    parser.add_argument("-a", "--adaptseq", type=str,
                         default='AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT',
                         help="The adapter sequence to be trimmed from the "
                         "FastQ file.")
@@ -128,28 +128,29 @@ if __name__ == "__main__":
 
     ### Run FastQC
     startrfqc = datetime.datetime.now()
-    pfqc = rfqc.run_fqc(args, args.fqcdir1)
+    pfqc = rfqc.run_fqc(args, args.fqcdir1, args.infiles)
     pfqc.wait()
     endrfqc = datetime.datetime.now()
     print(endrfqc-startrfqc)
 
     ### Check FastQC output, simple yes/no to quality trimming
     passthrough = 1
-    qcpass, qtrim, atrim, recheck = cfqc.check_qc(args, args.fqcdir1, passthrough)
+    qcpass, qtrim, atrim, recheck = cfqc.check_qc(args, args.fqcdir1,
+                                                            passthrough)
 
     ### Run Quality Trimming
     if qcpass:
         if qtrim:
-            ptrimqc = rt.trimQC(args)
+            ptrimqc, f1, f2 = rt.trimQC(args, args.infiles)
             ptrimqc.wait()
 
         if atrim:
             ### Run Adapter Trimming
-            ptrima = rt.trimadapt(args)
+            ptrima, f1, f2 = rt.trimadapt(args, [f1, f2])
             ptrima.wait()
 
         if recheck:
-            pfqc = rfqc.run_fqc(args, args.fqcdir2)
+            pfqc = rfqc.run_fqc(args, args.fqcdir2, [f1, f2])
             pfqc.wait()
             qcpass, qtrim, atrim, recheck = cfqc.check_qc(args, args.fqcdir2,
                                                            passthrough)
@@ -157,11 +158,11 @@ if __name__ == "__main__":
         ##If qcpass is still true, then finished succesfully.
         if qcpass:
             print "Finished successfully"
-			print qcpass, qtrim, atrim, recheck
+            print qcpass, qtrim, atrim, recheck
 
         else:
             print "Needs manual check"
-			print qcpass, qtrim, atrim, recheck
+            print qcpass, qtrim, atrim, recheck
     else:
         print "Needs manual check"
-		print qcpass, qtrim, atrim, recheck
+        print qcpass, qtrim, atrim, recheck

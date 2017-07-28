@@ -36,13 +36,13 @@ import SeqQC
 
 #     return parser.parse_args()
 
-def run_fqc(arglist, outdir):
+def run_fqc(arglist, outdir, infiles):
     """
     Create and run subprocess for fastqc
     """
     command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(outdir,
                              arglist.tmpdir, arglist.threads,
-                             ' '.join(arglist.files))
+                             ' '.join(infiles))
 
     cmdargs = shlex.split(command)
     print(command)

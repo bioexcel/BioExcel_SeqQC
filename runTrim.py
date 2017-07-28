@@ -40,17 +40,17 @@ import SeqQC
 
 #     return parser.parse_args()
 
-def trimadapt(arglist):
+def trimadapt(arglist, infiles):
     """
     Create and run subprocess for running cutadapt to remove adapter sequences
     from sequencing data.
     """
 
-    in1 = arglist.files[0]
-    in2 = arglist.files[1]
+    in1 = infiles[1]
+    in2 = infiles[2]
 
-    out1 = "{0}/Trimmed1.fq".format(arglist.trimdir)
-    out2 = "{0}/Trimmed2.fq".format(arglist.trimdir)
+    out1 = "{0}/ATrimmed1.fq".format(arglist.trimdir)
+    out2 = "{0}/ATrimmed2.fq".format(arglist.trimdir)
 
     command = "cutadapt --format=fastq -a {0} -A {0} -o {1} -p {2} "\
         "{3} {4}".format(arglist.adaptseq, out1, out2, in1, in2)
@@ -62,17 +62,17 @@ def trimadapt(arglist):
     p = sp.Popen(cmdargs)
     #p = sp.Popen('date')
 
-    return p
+    return p, out1, out2
 
 
-def trimQC(arglist):
+def trimQC(arglist, infiles):
     """
     Create and run subprocess for running cutadapt to remove poor quality
     sequences from sequencing data.
     """
 
-    in1 = "{0}/Trimmed1.fq".format(arglist.trimdir)
-    in2 = "{0}/Trimmed2.fq".format(arglist.trimdir)
+    in1 = infiles[1]
+    in2 = infiles[2]
 
     out1 = "{0}/QCTrimmed1.fq".format(arglist.trimdir)
     out2 = "{0}/QCTrimmed2.fq".format(arglist.trimdir)
@@ -86,11 +86,11 @@ def trimQC(arglist):
 
     p = sp.Popen(cmdargs)
 
-    return p
+    return p, out1, out2
 
 def main(arglist):
     """
-    Main function to run standalone FastQC instance
+    Main function to run standalone FastQC instance (not currently implemented)
     """
     print("Hello!")
     print(arglist)
