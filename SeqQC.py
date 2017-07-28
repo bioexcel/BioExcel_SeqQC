@@ -128,7 +128,7 @@ if __name__ == "__main__":
 
     ### Run FastQC
     startrfqc = datetime.datetime.now()
-    pfqc = rfqc.run_fqc(args, args.fqcdir1, args.infiles)
+    pfqc = rfqc.run_fqc(args, args.fqcdir1, args.files)
     pfqc.wait()
     endrfqc = datetime.datetime.now()
     print(endrfqc-startrfqc)
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     ### Run Quality Trimming
     if qcpass:
         if qtrim:
-            ptrimqc, f1, f2 = rt.trimQC(args, args.infiles)
+            ptrimqc, f1, f2 = rt.trimQC(args, args.files)
             ptrimqc.wait()
 
         if atrim:
