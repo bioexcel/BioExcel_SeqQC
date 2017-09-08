@@ -64,7 +64,7 @@ def parse_command_line(description=("This script performs the Sequence "
                         "the format hh:mm:ss.")
     parser.add_argument("-d", "--dryrun", action="store_true",
                         help="Run through stages without actually creating "
-                        "new processes.")
+                        "new processes. - NOT IMPLEMENTED YET!")
     return parser.parse_args()
 
 def make_paths(arglist):
