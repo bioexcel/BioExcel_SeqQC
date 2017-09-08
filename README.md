@@ -1,6 +1,8 @@
 # SeqQC
 Python scripts for submitting Sequence Quality Control pipeline to PBS-based machines (e.g. Cirrus)
 
+Other scripts can also be used within other workflows and pipelines, or run as standalone tools (only possible with SeqQC.py script for now)
+
 Requirements:
 - FastQC
 - Cutadapt
