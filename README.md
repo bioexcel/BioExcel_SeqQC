@@ -10,3 +10,10 @@ Requirements:
 
 Above packages can be easily obtained via installing BCBio, which also includes packages used in further downstream analysis.
 - Make sure paths are correctly set up if done so.
+
+## Future plans
+
+- Make SeqQc installable as python module into current environment
+- Make all modules/stages run as standalone programs
+- Implement objects for easier control?
+- Use [Compound Field Names](https://www.python.org/dev/peps/pep-3101/#simple-and-compound-field-names) to help with setting string values, especially in helping improve portability of job templates to non-PBS systems.
