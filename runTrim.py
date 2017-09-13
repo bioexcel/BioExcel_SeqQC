@@ -46,8 +46,8 @@ def trimadapt(arglist, infiles):
     from sequencing data.
     """
 
-    in1 = infiles[1]
-    in2 = infiles[2]
+    in1 = infiles[0]
+    in2 = infiles[1]
 
     out1 = "{0}/ATrimmed1.fq".format(arglist.trimdir)
     out2 = "{0}/ATrimmed2.fq".format(arglist.trimdir)
