@@ -140,14 +140,19 @@ if __name__ == "__main__":
 
     ### Run Quality Trimming
     if qcpass:
-        if qtrim:
-            ptrimqc, f1, f2 = rt.trimQC(args, args.files)
-            ptrimqc.wait()
 
-        if atrim:
-            ### Run Adapter Trimming
-            ptrima, f1, f2 = rt.trimadapt(args, [f1, f2])
-            ptrima.wait()
+        if qtrim and atrim:
+            ptrimfull, f1, f2 = rt.trimFull(args, args.files)
+            ptrimfull.wait()
+        else:
+            if qtrim:
+                ptrimqc, f1, f2 = rt.trimQC(args, args.files)
+                ptrimqc.wait()
+
+            if atrim:
+                ### Run Adapter Trimming
+                ptrima, f1, f2 = rt.trimadapt(args, [f1, f2])
+                ptrima.wait()
 
         if recheck:
             passthrough = 2

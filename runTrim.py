@@ -77,8 +77,31 @@ def trimQC(arglist, infiles):
     out1 = "{0}/QCTrimmed1.fq".format(arglist.trimdir)
     out2 = "{0}/QCTrimmed2.fq".format(arglist.trimdir)
 
-    command = "cutadapt -q 20 -o {0} -p {1} {2} {3}".format(out1, out2,
-                                                        in1, in2)
+    command = "cutadapt --format=fastq -q 20 -o {0} -p {1} {2} {3}".format(out1,
+                                                    out2, in1, in2)
+
+    cmdargs = shlex.split(command)
+    print(command)
+    print(cmdargs)
+
+    p = sp.Popen(cmdargs)
+
+    return p, out1, out2
+
+def trimFull(arglist, infiles):
+    """
+    Create and run subprocess for running cutadapt to remove poor quality
+    sequences from sequencing data.
+    """
+
+    in1 = infiles[0]
+    in2 = infiles[1]
+
+    out1 = "{0}/Trimmed1.fq".format(arglist.trimdir)
+    out2 = "{0}/Trimmed2.fq".format(arglist.trimdir)
+
+    command = "cutadapt --format=fastq -q 20 -a {0} -A {0} -o {1} -p {2} {3}"\
+                        " {4}".format(arglist.adaptseq, out1, out2, in1, in2)
 
     cmdargs = shlex.split(command)
     print(command)
