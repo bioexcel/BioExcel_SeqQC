@@ -6,7 +6,8 @@ FastQC process with the correct parameters.
 """
 import os
 import argparse
-
+import runFastQC as rfqc
+import runTrim as rt
 
 # import argparse
 
@@ -126,11 +127,10 @@ def printlog(qcpass, qtrim, recheck):
     # Pring things to a log file.
     return
 
-def check_qc(fqcdir, passthrough):
+
+def get_qc(fqcdir, passthrough):
     '''
-    Check the QC reports for any pass/fails, and use these to decide
-    whether to run a QC trim on the samples. True = Pass, False = Fail, trim
-    needed.
+    Returns QC flags for both samples
     '''
     #Default to assuming things are fine and dandy, change if not.
     qcpass = True
@@ -187,7 +187,7 @@ def check_qc(fqcdir, passthrough):
                 atrim = True
                 recheck = True
             if passthrough == 2:
-                qcpass = False            
+                qcpass = False
 
         if qclist[11] != 'PASS' and passthrough == 1:
             qtrim = True
@@ -197,15 +197,58 @@ def check_qc(fqcdir, passthrough):
 
     return qcpass, qtrim, atrim, recheck
 
+
+def check_qc(arglist):
+    '''
+    Check the QC reports for any pass/fails, and use these to decide
+    whether to run a QC trim on the samples. True = Pass, False = Fail, trim
+    needed.
+    '''
+
+    passthrough = 1
+    qcpass, qtrim, atrim, recheck = get_qc(arglist.fqcdir1, passthrough)
+    if qcpass:
+
+        if qtrim and atrim:
+            ptrimfull, f1, f2 = rt.trimFull(arglist, arglist.files)
+            ptrimfull.wait()
+        else:
+            if qtrim:
+                ptrimqc, f1, f2 = rt.trimQC(arglist, arglist.files)
+                ptrimqc.wait()
+
+            if atrim:
+                ### Run Adapter Trimming
+                ptrima, f1, f2 = rt.trimadapt(arglist, [f1, f2])
+                ptrima.wait()
+
+        if recheck:
+            passthrough = 2
+            pfqc = rfqc.run_fqc(arglist, arglist.fqcdir2, [f1, f2])
+            pfqc.wait()
+            qcpass, qtrim, atrim, recheck = get_qc(arglist.fqcdir2,
+                                                           passthrough)
+
+        ##If qcpass is still true, then finished succesfully.
+        if qcpass:
+            print "Finished successfully"
+            print qcpass, qtrim, atrim, recheck
+
+        else:
+            print "Needs manual check"
+            print qcpass, qtrim, atrim, recheck
+    else:
+        print "Needs manual check"
+        print qcpass, qtrim, atrim, recheck
+
 def main(arglist):
     """
     Main function to run standalone FastQC instance
     """
     print("Hello!")
     print(arglist)
-    qcpass, qtrim, atrim, recheck = check_qc(args.indir, 1)
-    print qcpass, qtrim, atrim, recheck
-    #run_fqc(args)
+    check_qc(arglist)
+    #run_fqc(arglist)
 
 if __name__ == "__main__":
     description = ("This script checks FastQC output for PASS/WARN/FAIL values")
