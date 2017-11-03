@@ -68,7 +68,7 @@ def parse_command_line(description=("This script performs the Sequence "
 
 def make_paths(arglist):
     """
-    Create paths required for first run of SeqQC pipeline
+    Create paths required for run of SeqQC pipeline
     """
     arglist.tmpdir = os.path.abspath("{0}/tmp".format(arglist.outdir))
     arglist.fqcdir1 = os.path.abspath("{0}/FastQC_out/1stpass".format(
