@@ -14,23 +14,6 @@ import argparse
 import runFastQC as rfqc
 import checkFastQC as cfqc
 
-# class SeqQCRunner(object):
-#     def __init__ (self, infile, args):
-#         adaptrim = False
-#         qctrim = False
-
-#     def run_fastqc(self):
-#         pass
-
-#     def run_qctrim(self):
-#         pass
-
-#     def run_adaptrim(self):
-#         pass
-
-#     def check_qc(self):
-#         pass
-
 def parse_command_line(description=("This script performs the Sequence "
                 "Quality Control step of the Cancer Genome Variant pipeline.")):
     """
@@ -61,9 +44,9 @@ def parse_command_line(description=("This script performs the Sequence "
     parser.add_argument("-w", "--walltime", default='02:00:00',
                         help="Walltime for PBS submission script. Must be of "
                         "the format hh:mm:ss.")
-    parser.add_argument("-d", "--dryrun", action="store_true",
-                        help="Run through stages without actually creating "
-                        "new processes. - NOT IMPLEMENTED YET!")
+    # parser.add_argument("-d", "--dryrun", action="store_true",
+    #                     help="Run through stages without actually creating "
+    #                     "new processes. - NOT IMPLEMENTED YET!")
     return parser.parse_args()
 
 def make_paths(arglist):
