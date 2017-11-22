@@ -25,7 +25,7 @@ import runTrim as rt
 #                         help="Directory containing input FastQ files to scan "
 #                         "(ignored if -f/--files flag is prsent)")
 #     parser.add_argument("-f", "--files", nargs='*',
-#                         help="Flag to pass individual files rather than input "
+#                         help="Flag to pass individual files rather than input"
 #                         "directory.")
 #     parser.add_argument("-o", "--fqcdir", default='',
 #                         help="Output directory")
@@ -243,11 +243,11 @@ def check_qc(arglist):
 
 def main(arglist):
     """
-    Main function to run standalone FastQC instance
+    Main function to run standalone checkFastQC instance
     """
     print("Hello!")
     print(arglist)
-    check_qc(arglist)
+    #check_qc(arglist)
     #run_fqc(arglist)
 
 if __name__ == "__main__":
