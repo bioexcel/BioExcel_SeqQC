@@ -7,40 +7,9 @@ cutadapt process with the correct parameters.
 
 import shlex
 import subprocess as sp
-import SeqQC
+import seqqcUtils as sqcu
 
-
-# def parse_command_line():
-#     """
-#     Parser of command line arguments for SeqQC.py
-#     """
-#     description = ("This script runs the FastQC step of SeqQC")
-
-#     parser = argparse.ArgumentParser(
-#         description=description,
-#         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
-#     parser.add_argument("-i", "--indir", default='',
-#                         help="Directory containing input FastQ files to scan "
-#                         "(ignored if -f/--files flag is prsent)")
-#     parser.add_argument("-f", "--files", nargs='*',
-#                         help="Flag to pass individual files rather than input "
-#                         "directory.")
-#     parser.add_argument("-o", "--outdir", default='',
-#                         help="Output directory")
-#     parser.add_argument("--tmpdir", default='',
-#                         help="Temp directory")
-#     parser.add_argument("-t", "--threads", type=int, default='0',
-#                         help="Number of threads for FastQC use. Normal use: "
-#                         "Number of threads = number of files. Default 0 for "
-#                         "automatic calculation.")
-#     parser.add_argument("-a", "--adaptseq", type=str, default='',
-#                         help="The adapter sequence to be trimmed from the "
-#                         "FastQ file.")
-
-#     return parser.parse_args()
-
-def trimadapt(arglist, infiles):
+def trimAdapt(arglist, infiles):
     """
     Create and run subprocess for running cutadapt to remove adapter sequences
     from sequencing data.
@@ -111,15 +80,16 @@ def trimFull(arglist, infiles):
 
     return p, out1, out2
 
-def main(arglist):
-    """
-    Main function to run standalone FastQC instance (not currently implemented)
-    """
-    print("Hello!")
-    print(arglist)
-    #run_fqc(args)
-
 if __name__ == "__main__":
     description = ("This script runs the Trimming step of SeqQC")
-    args = SeqQC.parse_command_line(description)
-    main(args)
+    args = sqcu.parse_command_line(description)
+    if args.trim == 'full':
+        ptrimfull, f1, f2 = trimFull(args, args.files)
+        ptrimfull.wait()
+    if args.trim == 'adapt':
+        ptrimfull, f1, f2 = trimAdapt(args, args.files)
+        ptrimfull.wait()
+    if args.trim == 'qual':
+        ptrimfull, f1, f2 = trimQC(args, args.files)
+        ptrimfull.wait()
+        

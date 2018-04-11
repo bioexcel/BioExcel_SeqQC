@@ -5,9 +5,32 @@ This script contains several utility functions for use with the SeqQC portion
 of the IGMM Cancer Genome Sequencing workflow developed as part of BioExcel
 """
 
-import glob
 import os
 import sys
+import argparse
+
+def parse_command_line(description):
+    """
+    Parser of command line arguments for SeqQC.py
+    """
+    parser = argparse.ArgumentParser(
+        description=description,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument("-f", "--files", nargs=2,
+                        help="Pair of input FastQ files.")
+    parser.add_argument("-o", "--outdir", default='',
+                        help="Output directory.")
+    parser.add_argument("-a", "--adaptseq", type=str,
+        default='AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT',
+                        help="The adapter sequence to be trimmed from the "
+                        "FastQ file.")
+    parser.add_argument("--trim", type=str, default='full',
+                        choices=['full', 'adapt', 'qual'],
+                        help="The type of trimming to be done on the paired "
+                        "sequences: adapter or quality trimming, or full/both. "
+                        "WARNING: For standalone execution of runTrim.py only!")
+    return parser.parse_args()
 
 def make_paths(arglist):
     """
@@ -32,26 +55,10 @@ def get_files(arglist):
     """
     Search for and return list of files to pass through SeqQC pipeline
     """
-    if not arglist.files:
-        # arglist dirs already have abs paths, so don't need to expand
-        infiles = glob.glob('{0}/*fastq*'.format(arglist.indir))
-    else:
-        # make sure files exist
-        for checkfile in arglist.files:
-            if not os.path.isfile(checkfile):
-                print "{} does not exist. Exiting.".format(checkfile)
-                sys.exit()
-        # expand paths to files (now we know the all exist)
-        infiles = [os.path.abspath(x) for x in arglist.files]
+    # make sure files exist
+    for checkfile in arglist.files:
+        if not os.path.isfile(checkfile):
+            sys.exit("{} does not exist. Exiting.".format(checkfile))
+    # expand paths to files (now we know the all exist)
+    infiles = [os.path.abspath(x) for x in arglist.files]
     return infiles
-
-def get_threads(arglist):
-    """
-    Find number of threads, either from argparse or number of files.
-    """
-    if arglist.threads == 0:
-        print(len(arglist.files))
-        return len(arglist.files)
-
-    return arglist.threads
-    
