@@ -6,21 +6,16 @@ Genome Variant pipeline, controlling the processes and
 decision making for each step.
 """
 
-import glob
-import datetime
-import os
-import sys
 import argparse
 import runFastQC as rfqc
 import checkFastQC as cfqc
+import seqqcUtils as sqcu
 
 def parse_command_line(description=("This script performs the Sequence "
                 "Quality Control step of the Cancer Genome Variant pipeline.")):
     """
     Parser of command line arguments for SeqQC.py
     """
-
-
     parser = argparse.ArgumentParser(
         description=description,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -49,71 +44,16 @@ def parse_command_line(description=("This script performs the Sequence "
     #                     "new processes. - NOT IMPLEMENTED YET!")
     return parser.parse_args()
 
-def make_paths(arglist):
-    """
-    Create paths required for run of SeqQC pipeline
-    """
-    arglist.tmpdir = os.path.abspath("{0}/tmp".format(arglist.outdir))
-    arglist.fqcdir1 = os.path.abspath("{0}/FastQC_out/1stpass".format(
-                                                            arglist.outdir))
-    arglist.fqcdir2 = os.path.abspath("{0}/FastQC_out/2ndpass".format(
-                                                            arglist.outdir))
-    arglist.trimdir = os.path.abspath("{0}/Trim_out".format(arglist.outdir))
-    arglist.outdir = os.path.abspath(arglist.outdir)
-    arglist.indir = os.path.abspath(arglist.indir)
-
-    for dirpath in [arglist.tmpdir, arglist.fqcdir1, arglist.fqcdir2,
-                                arglist.trimdir, arglist.outdir]:
-        if not os.path.exists(dirpath):
-            os.makedirs(dirpath)
-    return arglist
-
-def get_files(arglist):
-    """
-    Search for and return list of files to pass through SeqQC pipeline
-    """
-    if not arglist.files:
-        # arglist dirs already have abs paths, so don't need to expand
-        infiles = glob.glob('{0}/*fastq*'.format(arglist.indir))
-    else:
-        # make sure files exist
-        for checkfile in arglist.files:
-            if not os.path.isfile(checkfile):
-                print "{} does not exist. Exiting.".format(checkfile)
-                sys.exit()
-        # expand paths to files (now we know the all exist)
-        infiles = [os.path.abspath(x) for x in arglist.files]
-    return infiles
-
-
-
-def get_threads(arglist):
-    """
-    Find number of threads, either from argparse or number of files.
-    """
-    if arglist.threads == 0:
-        print(len(arglist.files))
-        return len(arglist.files)
-    else: return arglist.threads
-
-
 if __name__ == "__main__":
 
     args = parse_command_line()
-    print(args)
-    args = make_paths(args)
-    args.files = get_files(args)
-    args.threads = get_threads(args)
-    print(args.files)
-    print(args.threads)
-    print(args)
+    args = sqcu.make_paths(args)
+    args.files = sqcu.get_files(args)
+    args.threads = sqcu.get_threads(args)
 
     ### Run FastQC
-    startrfqc = datetime.datetime.now()
     pfqc = rfqc.run_fqc(args, args.fqcdir1, args.files)
     pfqc.wait()
-    endrfqc = datetime.datetime.now()
-    print(endrfqc-startrfqc)
 
     ### Check FastQC output, simple yes/no to quality trimming
     ### Output and resubmission of jobs handled by checkFastQC

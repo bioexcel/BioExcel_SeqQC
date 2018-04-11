@@ -8,75 +8,13 @@ import os
 import argparse
 import runFastQC as rfqc
 import runTrim as rt
-
-# import argparse
-
-# def parse_command_line():
-#     """
-#     Parser of command line arguments for SeqQC.py
-#     """
-#     description = ("This script runs the FastQC step of SeqQC")
-
-#     parser = argparse.ArgumentParser(
-#         description=description,
-#         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
-#     parser.add_argument("-i", "--fqcdir", default='',
-#                         help="Directory containing input FastQ files to scan "
-#                         "(ignored if -f/--files flag is prsent)")
-#     parser.add_argument("-f", "--files", nargs='*',
-#                         help="Flag to pass individual files rather than input"
-#                         "directory.")
-#     parser.add_argument("-o", "--fqcdir", default='',
-#                         help="Output directory")
-#     parser.add_argument("--tmpdir", default='',
-#                         help="Temp directory")
-#     parser.add_argument("-t", "--threads", type=int, default='0',
-#                         help="Number of threads for FastQC use. Normal use: "
-#                         "Number of threads = number of files. Default 0 for "
-#                         "automatic calculation.")
-
-#     return parser.parse_args()
-
-# class FastQCCheck(object):
-#     '''
-#     Class for reading and checking FastQC reports
-#     '''
-#     def __init__(self, arglist, infile):
-#         self.infile = infile
-#         self.arglist = arglist
-#         self.passthrough = 1
-#         self.qcdict = dict.fromkeys(["basic", "baseq"])
-#         self.basic, self.baseq, self.tileq, self.seqq
-
-#     def readQCreport(self):
-#         '''
-#         Read in QC report for the file provided
-#         '''
-#         _, filename = os.path.split(self.infile)
-#         summaryfile = "{0}/{1}/summary.txt".format(fqcdir,
-#                         filename.replace('.fastq.bz2', '_fastqc'))
-#         with open(summaryfile) as f:
-#             self.basic = f.readline.split()[0]
-
-#             # for line in f:
-#             #     splitline = line.split()
-
-#     def printargs(self):
-#         '''Print args for object'''
-#         print self.arglist
-
-#     def printfile(self):
-#         '''Print file creating object'''
-#         print self.infile
-
+import seqqcUtils as sqcu
 
 def parse_command_line(desc=("This script performs the Sequence "
                 "Quality Control step of the Cancer Genome Variant pipeline.")):
     """
     Parser of command line arguments for SeqQC.py
     """
-
 
     parser = argparse.ArgumentParser(
         description=desc,
@@ -119,15 +57,6 @@ def readQCreports(fqcout):
         reports.append(qcsumm)
     return reports
 
-def printlog(qcpass, qtrim, recheck):
-    '''
-    Print things to a log file
-    '''
-    print qcpass, qtrim, recheck
-    # Pring things to a log file.
-    return
-
-
 def get_qc(fqcdir, passthrough):
     '''
     Returns QC flags for both samples
@@ -138,7 +67,7 @@ def get_qc(fqcdir, passthrough):
     atrim = False
     recheck = False
     reports = readQCreports(fqcdir)
-    #print "Hello?"
+
     for report in reports:
         qclist = []
         for line in report:
@@ -231,26 +160,28 @@ def check_qc(arglist):
 
         ##If qcpass is still true, then finished succesfully.
         if qcpass:
-            print "Finished successfully"
-            print qcpass, qtrim, atrim, recheck
+            print("Finished successfully")
+            print(qcpass, qtrim, atrim, recheck)
 
         else:
-            print "Needs manual check"
-            print qcpass, qtrim, atrim, recheck
+            print("Needs manual check")
+            print(qcpass, qtrim, atrim, recheck)
     else:
-        print "Needs manual check"
-        print qcpass, qtrim, atrim, recheck
+        print("Needs manual check")
+        print(qcpass, qtrim, atrim, recheck)
 
 def main(arglist):
     """
     Main function to run standalone checkFastQC instance
     """
-    print("Hello!")
-    print(arglist)
-    #check_qc(arglist)
-    #run_fqc(arglist)
+
+    rfqc.run_fqc(arglist, args.fqcdir1, args.files)
+    check_qc(arglist)
 
 if __name__ == "__main__":
     description = ("This script checks FastQC output for PASS/WARN/FAIL values")
     args = parse_command_line(description)
+    args = sqcu.make_paths(args)
+    args.files = sqcu.get_files(args)
+    args.threads = sqcu.get_threads(args)
     main(args)
