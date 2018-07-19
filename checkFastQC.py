@@ -119,7 +119,7 @@ def check_qc(arglist):
 
             if atrim:
                 ### Run adapter trimming only
-                ptrima, f1, f2 = rt.trimAdapt(arglist, [f1, f2])
+                ptrima, f1, f2 = rt.trimAdapt(arglist, arglist.files)
                 ptrima.wait()
 
         if recheck:
