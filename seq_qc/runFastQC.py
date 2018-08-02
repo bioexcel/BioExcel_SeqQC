@@ -7,7 +7,7 @@ FastQC process with the correct parameters.
 
 import shlex
 import subprocess as sp
-import seqqcUtils as sqcu
+import seq_qc.seqqcUtils as sqcu
 
 def run_fqc(arglist, outdir, infiles):
     """

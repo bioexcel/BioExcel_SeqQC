@@ -6,9 +6,9 @@ Genome Variant pipeline, controlling the processes and
 decision making for each step.
 """
 
-import runFastQC as rfqc
-import checkFastQC as cfqc
-import seqqcUtils as sqcu
+import seq_qc.runFastQC as rfqc
+import seq_qc.checkFastQC as cfqc
+import seq_qc.seqqcUtils as sqcu
 
 if __name__ == "__main__":
 

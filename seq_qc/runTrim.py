@@ -7,7 +7,7 @@ cutadapt process with the correct parameters.
 
 import shlex
 import subprocess as sp
-import seqqcUtils as sqcu
+import seq_qc.seqqcUtils as sqcu
 
 def trimAdapt(arglist, infiles):
     """
@@ -29,7 +29,6 @@ def trimAdapt(arglist, infiles):
     print(cmdargs)
 
     p = sp.Popen(cmdargs)
-    #p = sp.Popen('date')
 
     return p, out1, out2
 
