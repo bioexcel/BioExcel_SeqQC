@@ -5,9 +5,9 @@ This script runs the FastQC step of SeqQC. The script opens a
 FastQC process with the correct parameters.
 """
 import os
-import seq_qc.runFastQC as rfqc
-import seq_qc.runTrim as rt
-import seq_qc.seqqcUtils as sqcu
+import seqqc_bioexcel.runfastqc as rfqc
+import seqqc_bioexcel.runtrim as rt
+import seqqc_bioexcel.seqqcutils as sqcu
 
 def readQCreports(fqcout):
     """

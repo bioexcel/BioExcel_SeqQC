@@ -1,2 +1,0 @@
-/Users/djwhite3/virtualenvs/miniconda3/lib/python3.6/site-packages/SeqQC-0.1.0-py3.6.egg
-/Users/djwhite3/virtualenvs/miniconda3/bin/SeqQC
