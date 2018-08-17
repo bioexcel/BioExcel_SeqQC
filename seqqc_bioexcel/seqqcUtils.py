@@ -43,7 +43,6 @@ def make_paths(arglist):
                                                             arglist.outdir))
     arglist.trimdir = os.path.abspath("{0}/Trim_out".format(arglist.outdir))
     arglist.outdir = os.path.abspath(arglist.outdir)
-    arglist.indir = os.path.abspath(arglist.indir)
 
     for dirpath in [arglist.tmpdir, arglist.fqcdir1, arglist.fqcdir2,
                                 arglist.trimdir, arglist.outdir]:

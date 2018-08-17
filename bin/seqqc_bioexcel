@@ -26,3 +26,4 @@ if __name__ == "__main__":
     ### Check FastQC output, simple yes/no to quality trimming
     ### Output and resubmission of jobs handled by checkFastQC
     cfqc.check_qc(args)
+
