@@ -9,12 +9,12 @@ import shlex
 import subprocess as sp
 import seqqc_bioexcel.seqqcutils as sqcu
 
-def run_fqc(arglist, outdir, infiles):
+def run_fqc(infiles, fqcdir,  tmpdir):
     """
     Create and run subprocess for fastqc
     """
-    command = "fastqc -o {0} -d {1} -t 2 --extract {2}".format(outdir,
-                             arglist.tmpdir, ' '.join(infiles))
+    command = "fastqc -o {0} -d {1} -t 2 --extract {2}".format(fqcdir,
+                             tmpdir, ' '.join(infiles))
 
     cmdargs = shlex.split(command)
     print(command)
@@ -32,5 +32,5 @@ if __name__ == "__main__":
     args.files = sqcu.get_files(args)
 
     ### Run FastQC
-    pfqc = run_fqc(args, args.fqcdir1, args.files)
+    pfqc = run_fqc(args.fqcdir, args.files, args.tmpdir)
     pfqc.wait()

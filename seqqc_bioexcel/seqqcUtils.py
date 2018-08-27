@@ -17,9 +17,9 @@ def parse_command_line(description):
         description=description,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("-f", "--files", nargs=2,
+    parser.add_argument("-f", "--files", nargs=2, required=True,
                         help="Pair of input FastQ files.")
-    parser.add_argument("-o", "--outdir", default='',
+    parser.add_argument("-o", "--outdir", default='./',
                         help="Output directory.")
     parser.add_argument("-a", "--adaptseq", type=str,
         default='AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT',
@@ -37,14 +37,14 @@ def make_paths(arglist):
     Create paths required for run of SeqQC pipeline
     """
     arglist.tmpdir = os.path.abspath("{0}/tmp".format(arglist.outdir))
-    arglist.fqcdir1 = os.path.abspath("{0}/FastQC_out/1stpass".format(
+    arglist.fqcdir = os.path.abspath("{0}/FastQC_out".format(
                                                             arglist.outdir))
     arglist.fqcdir2 = os.path.abspath("{0}/FastQC_out/2ndpass".format(
                                                             arglist.outdir))
     arglist.trimdir = os.path.abspath("{0}/Trim_out".format(arglist.outdir))
     arglist.outdir = os.path.abspath(arglist.outdir)
 
-    for dirpath in [arglist.tmpdir, arglist.fqcdir1, arglist.fqcdir2,
+    for dirpath in [arglist.tmpdir, arglist.fqcdir2,
                                 arglist.trimdir, arglist.outdir]:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)

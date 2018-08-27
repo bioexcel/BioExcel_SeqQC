@@ -95,7 +95,7 @@ def get_qc(fqcdir, passthrough):
     return qcpass, qtrim, atrim, recheck
 
 
-def check_qc(arglist):
+def check_qc(infiles,fqcdir,trimdir,tmpdir,adaptseq):
     """
     Check the QC reports for any pass/fails, and use these to decide
     whether to run a QC trim on the samples. True = Pass, False = Fail, trim
@@ -104,30 +104,30 @@ def check_qc(arglist):
     ### First pass through this part of the workflow, different options for
     ### pass dealt with in get_qc - may need changing if logic changes
     passthrough = 1
-    qcpass, qtrim, atrim, recheck = get_qc(arglist.fqcdir1, passthrough)
+    qcpass, qtrim, atrim, recheck = get_qc(fqcdir, passthrough)
     if qcpass:
 
         if qtrim and atrim:
             ### Do both quality AND adapter trimming
-            ptrimfull, f1, f2 = rt.trimFull(arglist, arglist.files)
+            ptrimfull, f1, f2 = rt.trimFull(infiles,trimdir,adaptseq)
             ptrimfull.wait()
         else:
             if qtrim:
                 ### Run quality trimming only
-                ptrimqc, f1, f2 = rt.trimQC(arglist, arglist.files)
+                ptrimqc, f1, f2 = rt.trimQC(infiles,trimdir)
                 ptrimqc.wait()
 
             if atrim:
                 ### Run adapter trimming only
-                ptrima, f1, f2 = rt.trimAdapt(arglist, arglist.files)
+                ptrima, f1, f2 = rt.trimAdapt(infiles,trimdir,adaptseq)
                 ptrima.wait()
 
         if recheck:
             ### May need work if logic changes to need retrim after pass 2
             passthrough = 2
-            pfqc = rfqc.run_fqc(arglist, arglist.fqcdir2, [f1, f2])
+            pfqc = rfqc.run_fqc([f1, f2], fqcdir+'2ndpass', tmpdir)
             pfqc.wait()
-            qcpass, qtrim, atrim, recheck = get_qc(arglist.fqcdir2,
+            qcpass, qtrim, atrim, recheck = get_qc(fqcdir+'2ndpass',
                                                            passthrough)
 
         ##If qcpass is still true, then finished succesfully.
@@ -152,4 +152,4 @@ if __name__ == "__main__":
 
     ### Check FastQC output, simple yes/no to quality trimming
     ### Output and resubmission of jobs handled by checkFastQC
-    check_qc(args)
+    check_qc(args.files,args.fqcdir,args.trimdir,args.tmpdir,args.adaptseq)
