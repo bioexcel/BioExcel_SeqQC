@@ -1,0 +1,9 @@
+PipelineConfig:
+    files: ['infile1','infile2']
+    outdir: './'
+    trim: 'full' # choices=['full', 'adapt', 'qual']
+    adaptseq: 'AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+
+CheckFastQC:
+    BaseStats:
+        
