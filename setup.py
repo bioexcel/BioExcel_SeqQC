@@ -19,6 +19,6 @@ setup(
     scripts=['bin/bioexcel_seqqc'],
     packages=['bioexcel_seqqc'],
     package_dir={'bioexcel_seqqc': 'bioexcel_seqqc'},
-    install_requires=[],
+    install_requires=['pyyaml'],
     data_files=[('bioexcel_seqqc', ['data/checkQC.yml'])],
 )

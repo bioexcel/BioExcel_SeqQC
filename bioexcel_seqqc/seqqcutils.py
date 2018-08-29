@@ -80,7 +80,7 @@ def get_qcconfig(configfile):
     """
     if not configfile: # Read internal file
         basepath = (os.path.dirname(__file__))
-        config = yaml.safe_load(open(basepath+'/config.yml'))
+        config = yaml.safe_load(open(basepath+'/checkQC.yml'))
     else:
         config = yaml.safe_load(open(configfile))
     return config
@@ -90,5 +90,5 @@ def print_config():
     Print/copy decision configuration of CheckFastQC portion of workflow
     """
     basepath = (os.path.dirname(__file__))
-    config = basepath+'/config.yml'
+    config = basepath+'/checkQC.yml'
     shutil.copy(config, './')
