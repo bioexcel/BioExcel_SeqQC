@@ -1,5 +1,13 @@
 # Default position is that everything is okay. Alter/add options below to 
-# change what happens if that is not the case 
+# change what happens if that is not the case.
+
+# Names of each section should match FastQC summary.txt output. For each 
+# section declare how the variables change qcpass, qtrim (quality = 20 
+# trim), atrim (adapter sequence trimming) and recheck (re-run through FastQC 
+# after trimming). Can also set these under 'pass1/2', which changes behaviour 
+# depending on whether the files have already been trimmed. Pass1 = original 
+# files, Pass2 = files post trimming.
+
 Basic Statistics:
     WARN: 
         qcpass: False
