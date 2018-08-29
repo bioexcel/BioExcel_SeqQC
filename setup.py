@@ -1,20 +1,24 @@
 #! /usr/bin/env python
 
-from setuptools import setup
+'''
+Setup script for bioexcel_seqqc.
+'''
+
 from distutils.command.install import INSTALL_SCHEMES
+from setuptools import setup
 
 for scheme in INSTALL_SCHEMES.values():
     scheme['data'] = scheme['purelib']
 
 setup(
-    name='SeqQC_BioExcel',
+    name='bioexcel_seqqc',
     version='0.2.0',
     description=('Sequence Quality Control python package'),
     author='Darren White',
     author_email='d.white@epcc.ed.ac.uk',
-    scripts=['bin/seqqc_bioexcel'],
-    packages=['seqqc_bioexcel'],
-    package_dir={'seqqc_bioexcel': 'seqqc_bioexcel'},
+    scripts=['bin/bioexcel_seqqc'],
+    packages=['bioexcel_seqqc'],
+    package_dir={'bioexcel_seqqc': 'bioexcel_seqqc'},
     install_requires=[],
-    data_files=[('seqqc_bioexcel', ['data/checkQC.yml'])],
+    data_files=[('bioexcel_seqqc', ['data/checkQC.yml'])],
 )

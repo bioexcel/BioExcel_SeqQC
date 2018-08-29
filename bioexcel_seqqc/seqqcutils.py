@@ -8,8 +8,8 @@ of the IGMM Cancer Genome Sequencing workflow developed as part of BioExcel
 import os
 import sys
 import argparse
-import yaml
 import shutil
+import yaml
 
 def parse_command_line(description):
     """
@@ -19,12 +19,12 @@ def parse_command_line(description):
         description=description,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-p", "--printconfig", action='store_true',
-                        help="Print example config file in current directory")
-    
-    opts, other = parser.parse_known_args()
+                        help="Print example config files to current directory")
+
+    opts, _ = parser.parse_known_args()
     if opts.printconfig:
         return opts
-    
+
     parser.add_argument("-f", "--files", nargs=2, required=True,
                             help="Pair of input FastQ files.")
     parser.add_argument("-o", "--outdir", default='./',
@@ -38,7 +38,7 @@ def parse_command_line(description):
                         help="The type of trimming to be done on the paired "
                         "sequences: adapter or quality trimming, or full/both. "
                         "WARNING: For standalone execution of runTrim.py only!")
-    parser.add_argument("-c", "--config", type=str, 
+    parser.add_argument("-q", "--qcconfig", type=str,
         default='', help="Location of config file, defaults to internal file"
                 )
     return parser.parse_args()
@@ -74,7 +74,7 @@ def get_files(arglist):
     infiles = [os.path.abspath(x) for x in arglist.files]
     return infiles
 
-def get_config(configfile):
+def get_qcconfig(configfile):
     """
     Read decision configuration of CheckFastQC portion of workflow
     """
@@ -83,10 +83,12 @@ def get_config(configfile):
         config = yaml.safe_load(open(basepath+'/config.yml'))
     else:
         config = yaml.safe_load(open(configfile))
-
     return config
 
 def print_config():
+    """
+    Print/copy decision configuration of CheckFastQC portion of workflow
+    """
     basepath = (os.path.dirname(__file__))
     config = basepath+'/config.yml'
-    shutil.copy(config,'./')
+    shutil.copy(config, './')

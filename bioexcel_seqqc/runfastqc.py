@@ -7,9 +7,9 @@ FastQC process with the correct parameters.
 
 import shlex
 import subprocess as sp
-import seqqc_bioexcel.seqqcutils as sqcu
+import bioexcel_seqqc.seqqcutils as sqcu
 
-def run_fqc(infiles, fqcdir,  tmpdir):
+def run_fqc(infiles, fqcdir, tmpdir):
     """
     Create and run subprocess for fastqc
     """

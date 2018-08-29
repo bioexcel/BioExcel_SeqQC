@@ -6,10 +6,10 @@ Genome Variant pipeline, controlling the processes and
 decision making for each step.
 """
 
-import seqqc_bioexcel.runfastqc as rfqc
-import seqqc_bioexcel.checkfastqc as cfqc
-import seqqc_bioexcel.seqqcutils as sqcu
 import sys
+import bioexcel_seqqc.runfastqc as rfqc
+import bioexcel_seqqc.checkfastqc as cfqc
+import bioexcel_seqqc.seqqcutils as sqcu
 
 if __name__ == "__main__":
 
@@ -25,6 +25,7 @@ if __name__ == "__main__":
 
     args = sqcu.make_paths(args)
     args.files = sqcu.get_files(args)
+    args.qcconf = sqcu.get_qcconfig(args.config)
 
     ### Run FastQC
     pfqc = rfqc.run_fqc(args.fqcdir, args.files, args.tmpdir)
@@ -32,4 +33,5 @@ if __name__ == "__main__":
 
     ### Check FastQC output, simple yes/no to quality trimming
     ### Output and resubmission of jobs handled by checkFastQC
-    cfqc.check_qc(args.files,args.fqcdir,args.trimdir,args.tmpdir,args.adaptseq)
+    cfqc.check_qc(args.files, args.fqcdir, args.trimdir, args.tmpdir,
+                    args.adaptseq, args.qcconf)

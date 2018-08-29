@@ -7,7 +7,7 @@ cutadapt process with the correct parameters.
 
 import shlex
 import subprocess as sp
-import seqqc_bioexcel.seqqcutils as sqcu
+import bioexcel_seqqc.seqqcutils as sqcu
 
 def trimAdapt(infiles, trimdir, adaptseq):
     """
