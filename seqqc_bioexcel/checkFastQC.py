@@ -23,7 +23,7 @@ def readQCreports(fqcout):
         reports.append(qcsumm)
     return reports
 
-def get_qc(fqcdir, passthrough):
+def get_qc(fqcdir, passthrough, checks):
     """
     Returns QC flags for both samples
     """
@@ -39,58 +39,26 @@ def get_qc(fqcdir, passthrough):
     for report in reports:
         qclist = []
         for line in report:
-            splitline = line.split()
-            qclist.append(splitline[0]) #Store Pass/Warn/Fail in list
+            splitline = line.split('    ') # This relies on FastQC output not
+                                           # changing...
+            status = splitline[0]
+            section = splitline[1]
+            sectvars = checks[section]
+            #qclist.append(splitline[0]) #Store Pass/Warn/Fail in list
+            
+            # Check for dependance on 1st or 2nd pass through
+            try: 
+                sectvars = sectvars[passthrough]
+            except KeyError: pass 
 
-        if qclist[0] != 'PASS':
-            qcpass = False
+            try:
+                statvars = sectvars[status]
+                if 'qcpass' in statvars: qcpass = statvars['qcpass']
+                if 'qtrim' in statvars: qtrim = statvars['qtrim']
+                if 'atrim' in statvars: atrim = statvars['atrim']
+                if 'recheck' in statvars: recheck = statvars['qcpass']
+            except KeyError: pass
 
-        if qclist[1] != 'PASS' and passthrough == 1:
-            qtrim = True
-
-        if qclist[2] != 'PASS' and passthrough == 1:
-            qtrim = True
-
-        if qclist[3] != 'PASS':
-            qcpass = False
-
-        if qclist[4] == 'FAIL':
-            if passthrough == 1:
-                qtrim = True
-                recheck = True
-            if passthrough == 2:
-                qcpass = False
-
-        if qclist[5] == 'FAIL':
-            qcpass = False
-
-        if qclist[6] != 'PASS':
-            qcpass = False
-
-        if qclist[7] != 'PASS' and passthrough == 1:
-            qcpass = False
-
-        if qclist[8] != 'PASS':
-            qcpass = False
-
-        if qclist[9] != 'PASS' and passthrough == 1:
-            atrim = True
-            recheck = True
-        if qclist[9] == 'FAIL' and passthrough == 2:
-            qcpass = False
-
-        if qclist[10] != 'PASS':
-            if passthrough == 1:
-                atrim = True
-                recheck = True
-            if passthrough == 2:
-                qcpass = False
-
-        if qclist[11] != 'PASS' and passthrough == 1:
-            qtrim = True
-            recheck = True
-        if qclist[11] == 'FAIL' and passthrough == 2:
-            qcpass = False
 
     return qcpass, qtrim, atrim, recheck
 
@@ -103,7 +71,7 @@ def check_qc(infiles,fqcdir,trimdir,tmpdir,adaptseq):
     """
     ### First pass through this part of the workflow, different options for
     ### pass dealt with in get_qc - may need changing if logic changes
-    passthrough = 1
+    passthrough = 'pass1'
     qcpass, qtrim, atrim, recheck = get_qc(fqcdir, passthrough)
     if qcpass:
 
@@ -124,7 +92,7 @@ def check_qc(infiles,fqcdir,trimdir,tmpdir,adaptseq):
 
         if recheck:
             ### May need work if logic changes to need retrim after pass 2
-            passthrough = 2
+            passthrough = 'pass2'
             pfqc = rfqc.run_fqc([f1, f2], fqcdir+'2ndpass', tmpdir)
             pfqc.wait()
             qcpass, qtrim, atrim, recheck = get_qc(fqcdir+'2ndpass',

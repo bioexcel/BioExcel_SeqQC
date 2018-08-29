@@ -9,6 +9,7 @@ decision making for each step.
 import seqqc_bioexcel.runfastqc as rfqc
 import seqqc_bioexcel.checkfastqc as cfqc
 import seqqc_bioexcel.seqqcutils as sqcu
+import sys
 
 if __name__ == "__main__":
 
@@ -16,6 +17,12 @@ if __name__ == "__main__":
                 "Quality Control step of the Cancer Genome Variant pipeline.")
 
     args = sqcu.parse_command_line(description)
+
+    if args.printconfig:
+        sqcu.print_config()
+        print("Example configuration file created in current directory")
+        sys.exit()
+
     args = sqcu.make_paths(args)
     args.files = sqcu.get_files(args)
 

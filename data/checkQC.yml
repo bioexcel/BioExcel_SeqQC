@@ -1,0 +1,97 @@
+# Default position is that everything is okay. Alter/add options below to 
+# change what happens if that is not the case 
+Basic Statistics:
+    WARN: 
+        qcpass: False
+    FAIL: 
+        qcpass: False
+
+Per base sequence quality:
+    pass1:
+        WARN:
+            qtrim: True
+        FAIL:
+            qtrim: True
+
+Per tile sequence quality:
+    pass1:
+        WARN:
+            qtrim: True
+        FAIL:
+            qtrim: True
+
+Per sequence quality scores:
+    WARN: 
+        qcpass: False
+    FAIL: 
+        qcpass: False
+
+Per base sequence content:
+    pass1:
+        FAIL:
+            qtrim: True
+            recheck: True
+    pass2:
+        FAIL: 
+            qcpass: False
+
+Per sequence GC content:
+    FAIL:
+        qcpass: False
+
+Per base N content:
+    WARN: 
+        qcpass: False
+    FAIL: 
+        qcpass: False       
+
+Sequence Length Distribution:
+    pass1:
+        WARN: 
+            qcpass: False
+        FAIL: 
+            qcpass: False
+
+Sequence Duplication Levels:
+    WARN: 
+        qcpass: False
+    FAIL: 
+        qcpass: False
+
+Overrepresented sequences:
+    pass1:
+        WARN:
+            qtrim: True
+            recheck: True
+        FAIL:
+            qtrim: True
+            recheck: True
+    pass2:
+        FAIL:
+            qcpass: False
+
+Adapter Content:
+    pass1:
+        WARN:
+            atrim: True
+            recheck: True
+        FAIL:
+            atrim: True
+            recehck: True
+    pass2:
+        WARN:
+            qcpass: False
+        FAIL:
+            qcpass: False
+
+Kmer Content:
+    pass1:
+        WARN:
+            qtrim: True
+            recheck: True
+        FAIL:
+            qtrim: True
+            recheck: True
+    pass2:
+        FAIL:
+            qcpass: False
