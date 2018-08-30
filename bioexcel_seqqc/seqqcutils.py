@@ -20,12 +20,7 @@ def parse_command_line(description):
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-p", "--printconfig", action='store_true',
                         help="Print example config files to current directory")
-
-    opts, _ = parser.parse_known_args()
-    if opts.printconfig:
-        return opts
-
-    parser.add_argument("-f", "--files", nargs=2, required=True,
+    parser.add_argument("-f", "--files", nargs=2,
                             help="Pair of input FastQ files.")
     parser.add_argument("-o", "--outdir", default='./',
                         help="Output directory.")
@@ -38,9 +33,17 @@ def parse_command_line(description):
                         help="The type of trimming to be done on the paired "
                         "sequences: adapter or quality trimming, or full/both. "
                         "WARNING: For standalone execution of runTrim.py only!")
-    parser.add_argument("-q", "--qcconfig", type=str,
+    parser.add_argument("-q", "--qcconf", type=str,
         default='', help="Location of config file, defaults to internal file"
                 )
+
+    args = parser.parse_args()
+    if args.printconfig:
+        return args
+    else:
+        if not args.files:
+            sys.exit("\nusage: bioexcel_seqqc -h for help \n\nbioexcel_seqqc: "
+                    "error: the following arguments are required: -f/--files")
     return parser.parse_args()
 
 def make_paths(arglist):
@@ -50,12 +53,10 @@ def make_paths(arglist):
     arglist.tmpdir = os.path.abspath("{0}/tmp".format(arglist.outdir))
     arglist.fqcdir = os.path.abspath("{0}/FastQC_out".format(
                                                             arglist.outdir))
-    arglist.fqcdir2 = os.path.abspath("{0}/FastQC_out/2ndpass".format(
-                                                            arglist.outdir))
     arglist.trimdir = os.path.abspath("{0}/Trim_out".format(arglist.outdir))
     arglist.outdir = os.path.abspath(arglist.outdir)
 
-    for dirpath in [arglist.tmpdir, arglist.fqcdir2,
+    for dirpath in [arglist.tmpdir, arglist.fqcdir,
                                 arglist.trimdir, arglist.outdir]:
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)

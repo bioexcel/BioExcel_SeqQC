@@ -28,6 +28,9 @@ def get_qc(fqcdir, passthrough, qcconf):
     Returns QC flags for both samples
     """
     #Default to assuming things are fine and dandy, change if not.
+
+    print("STAGE: Running CheckFastQC, pass number {}".format(passthrough))
+
     qcpass = True
     qtrim = False
     atrim = False
@@ -38,8 +41,9 @@ def get_qc(fqcdir, passthrough, qcconf):
     #Hopefully will be easier to alter in future versions (config file?)
     for report in reports:
         for line in report:
-            splitline = line.split('    ') # This relies on FastQC output not
+            splitline = line.split('\t') # This relies on FastQC output not
                                            # changing...
+            print(splitline)
             status = splitline[0]
             section = splitline[1]
             sectvars = qcconf[section]
@@ -64,7 +68,7 @@ def get_qc(fqcdir, passthrough, qcconf):
             except KeyError:
                 pass
 
-
+    print(qcpass, qtrim, atrim, recheck)
     return qcpass, qtrim, atrim, recheck
 
 
@@ -98,6 +102,8 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf):
         if recheck:
             ### May need work if logic changes to need retrim after pass 2
             passthrough = 'pass2'
+            if not os.path.exists(fqcdir+'2ndpass'):
+                os.makedirs(fqcdir+'2ndpass')
             pfqc = rfqc.run_fqc([f1, f2], fqcdir+'2ndpass', tmpdir)
             pfqc.wait()
             qcpass, qtrim, atrim, recheck = get_qc(fqcdir+'2ndpass',

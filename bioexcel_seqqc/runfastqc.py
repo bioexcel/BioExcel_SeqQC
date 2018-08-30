@@ -17,8 +17,9 @@ def run_fqc(infiles, fqcdir, tmpdir):
                              tmpdir, ' '.join(infiles))
 
     cmdargs = shlex.split(command)
+
+    print("STAGE: Running FastQC")
     print(command)
-    print(cmdargs)
 
     p = sp.Popen(cmdargs)
 

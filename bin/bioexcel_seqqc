@@ -25,10 +25,10 @@ if __name__ == "__main__":
 
     args = sqcu.make_paths(args)
     args.files = sqcu.get_files(args)
-    args.qcconf = sqcu.get_qcconfig(args.config)
+    args.qcconf = sqcu.get_qcconfig(args.qcconf)
 
     ### Run FastQC
-    pfqc = rfqc.run_fqc(args.fqcdir, args.files, args.tmpdir)
+    pfqc = rfqc.run_fqc(args.files, args.fqcdir, args.tmpdir)
     pfqc.wait()
 
     ### Check FastQC output, simple yes/no to quality trimming

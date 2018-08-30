@@ -6,7 +6,8 @@
 # trim), atrim (adapter sequence trimming) and recheck (re-run through FastQC 
 # after trimming). Can also set these under 'pass1/2', which changes behaviour 
 # depending on whether the files have already been trimmed. Pass1 = original 
-# files, Pass2 = files post trimming.
+# files, Pass2 = files post trimming. Currently only set up to cope with one 
+# recheck loop. May be able to do more in later versions.
 
 Basic Statistics:
     WARN: 
@@ -92,14 +93,14 @@ Adapter Content:
         FAIL:
             qcpass: False
 
-Kmer Content:
-    pass1:
-        WARN:
-            qtrim: True
-            recheck: True
-        FAIL:
-            qtrim: True
-            recheck: True
-    pass2:
-        FAIL:
-            qcpass: False
+# Kmer Content: # No longer output in fastqc (from bioconda)
+#     pass1:
+#         WARN:
+#             qtrim: True
+#             recheck: True
+#         FAIL:
+#             qtrim: True
+#             recheck: True
+#     pass2:
+#         FAIL:
+#             qcpass: False

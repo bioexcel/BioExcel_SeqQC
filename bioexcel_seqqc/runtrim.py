@@ -25,8 +25,9 @@ def trimAdapt(infiles, trimdir, adaptseq):
         "{3} {4}".format(adaptseq, out1, out2, in1, in2)
 
     cmdargs = shlex.split(command)
+
+    print("STAGE: Running cutadapt, adapter trimming.")
     print(command)
-    print(cmdargs)
 
     p = sp.Popen(cmdargs)
 
@@ -45,12 +46,13 @@ def trimQC(infiles, trimdir):
     out1 = "{0}/QCTrimmed1.fq".format(trimdir)
     out2 = "{0}/QCTrimmed2.fq".format(trimdir)
 
-    command = "cutadapt --format=fastq -q 20 -o {0} -p {1} {2} {3}".format(out1,
-                                                    out2, in1, in2)
+    command = "cutadapt --format=fastq -q 20 -o {0} -p {1} {2} {3} \
+                            --pair-filter=any".format(out1, out2, in1, in2)
 
     cmdargs = shlex.split(command)
+
+    print("STAGE: Running cutadapt, quality trimming.")
     print(command)
-    print(cmdargs)
 
     p = sp.Popen(cmdargs)
 
@@ -72,8 +74,9 @@ def trimFull(infiles, trimdir, adaptseq):
                         " {4}".format(adaptseq, out1, out2, in1, in2)
 
     cmdargs = shlex.split(command)
+
+    print("STAGE: Running cutadapt, both quality and adapter trimming.")
     print(command)
-    print(cmdargs)
 
     p = sp.Popen(cmdargs)
 
