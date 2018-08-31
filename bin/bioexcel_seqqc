@@ -28,10 +28,10 @@ if __name__ == "__main__":
     args.qcconf = sqcu.get_qcconfig(args.qcconf)
 
     ### Run FastQC
-    pfqc = rfqc.run_fqc(args.files, args.fqcdir, args.tmpdir)
+    pfqc = rfqc.run_fqc(args.files, args.fqcdir, args.tmpdir, args.threads)
     pfqc.wait()
 
     ### Check FastQC output, simple yes/no to quality trimming
     ### Output and resubmission of jobs handled by checkFastQC
     cfqc.check_qc(args.files, args.fqcdir, args.trimdir, args.tmpdir,
-                    args.adaptseq, args.qcconf)
+                    args.adaptseq, args.qcconf, args.threads)

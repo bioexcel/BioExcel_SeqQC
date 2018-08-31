@@ -9,12 +9,20 @@ import shlex
 import subprocess as sp
 import bioexcel_seqqc.seqqcutils as sqcu
 
-def run_fqc(infiles, fqcdir, tmpdir):
+def run_fqc(infiles, fqcdir, tmpdir, threads):
     """
     Create and run subprocess for fastqc
     """
-    command = "fastqc -o {0} -d {1} -t 2 --extract {2}".format(fqcdir,
-                             tmpdir, ' '.join(infiles))
+
+    # For efficient use of resources, limit threads to no more than number
+    # of infiles. FastQC only uses one thread per file at most.
+    if threads < len(infiles):
+        fqcthreads = threads
+    elif threads >= len(infiles):
+        fqcthreads = len(infiles)
+
+    command = "fastqc -o {0} -d {1} -t {2} --extract {3}".format(fqcdir,
+                             tmpdir, fqcthreads, ' '.join(infiles))
 
     cmdargs = shlex.split(command)
 
@@ -33,5 +41,5 @@ if __name__ == "__main__":
     args.files = sqcu.get_files(args)
 
     ### Run FastQC
-    pfqc = run_fqc(args.fqcdir, args.files, args.tmpdir)
+    pfqc = run_fqc(args.fqcdir, args.files, args.tmpdir, args.threads)
     pfqc.wait()

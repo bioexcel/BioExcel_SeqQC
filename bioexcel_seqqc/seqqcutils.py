@@ -24,6 +24,9 @@ def parse_command_line(description):
                             help="Pair of input FastQ files.")
     parser.add_argument("-o", "--outdir", default='./',
                         help="Output directory.")
+    parser.add_argument("-t", "--threads", default=2,
+                        help="Max number of threads to use (not all stages use "
+                            "all threads.)")
     parser.add_argument("-a", "--adaptseq", type=str,
         default='AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT',
                         help="The adapter sequence to be trimmed from the "
