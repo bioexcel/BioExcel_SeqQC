@@ -37,8 +37,8 @@ if __name__ == "__main__":
     description = ("This script runs the FastQC step of SeqQC")
     args = sqcu.parse_command_line(description)
 
-    args = sqcu.make_paths(args)
     args.files = sqcu.get_files(args)
+    args = sqcu.make_paths(args)
 
     ### Run FastQC
     pfqc = run_fqc(args.fqcdir, args.files, args.tmpdir, args.threads)
