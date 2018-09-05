@@ -23,7 +23,6 @@ if __name__ == "__main__":
         print("Example configuration file created in current directory")
         sys.exit()
 
-    args = sqcu.make_paths(args)
     args.files = sqcu.get_files(args)
     args.qcconf = sqcu.get_qcconfig(args.qcconf)
 
@@ -34,4 +33,4 @@ if __name__ == "__main__":
     ### Check FastQC output, simple yes/no to quality trimming
     ### Output and resubmission of jobs handled by checkFastQC
     cfqc.check_qc(args.files, args.fqcdir, args.trimdir, args.tmpdir,
-                    args.adaptseq, args.qcconf, args.threads)
+                    args.adaptseq, args.qcconf, args.threads, args.outdir)

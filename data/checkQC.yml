@@ -1,4 +1,5 @@
-# Default position is that everything is okay. Alter/add options below to 
+# Default position is that everything is okay (qcpass=True, 
+# qtrim/atrim/recheck=False). Alter/add options below to 
 # change what happens if that is not the case.
 
 # Names of each section should match FastQC summary.txt output. For each 

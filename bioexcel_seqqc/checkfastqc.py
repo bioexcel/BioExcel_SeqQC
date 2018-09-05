@@ -5,6 +5,7 @@ This script runs the FastQC step of SeqQC. The script opens a
 FastQC process with the correct parameters.
 """
 import os
+import shutil
 import bioexcel_seqqc.runfastqc as rfqc
 import bioexcel_seqqc.runtrim as rt
 import bioexcel_seqqc.seqqcutils as sqcu
@@ -14,10 +15,10 @@ def readQCreports(fqcout):
     Read in QC reports for each of the files provided
     """
     reports = []
-    fqcdirs = [os.path.join(fqcout, o) for o in os.listdir(fqcout) if
+    qcdirs = [os.path.join(fqcout, o) for o in os.listdir(fqcout) if
                                 os.path.isdir(os.path.join(fqcout, o))]
-    for fqcdir in fqcdirs:
-        summaryfile = "{0}/summary.txt".format(fqcdir)
+    for qcdir in qcdirs:
+        summaryfile = "{0}/summary.txt".format(qcdir)
         with open(summaryfile) as f:
             qcsumm = f.readlines()
         reports.append(qcsumm)
@@ -72,7 +73,8 @@ def get_qc(fqcdir, passthrough, qcconf):
     return qcpass, qtrim, atrim, recheck
 
 
-def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads):
+def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads,
+                                                                        outdir):
     """
     Check the QC reports for any pass/fails, and use these to decide
     whether to run a QC trim on the samples. True = Pass, False = Fail, trim
@@ -84,6 +86,9 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads):
     passthrough = 'pass1'
     qcpass, qtrim, atrim, recheck = get_qc(fqcdir, passthrough, qcconf)
     if qcpass:
+
+        f1, f2 = infiles[0], infiles[1] #store original file names, replaced if
+                                        #trimmed, to copy to output directory
 
         if qtrim and atrim:
             ### Do both quality AND adapter trimming
@@ -104,8 +109,7 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads):
         if recheck:
             ### Will need work if logic changes to need retrim after pass 2
             passthrough = 'pass2'
-            if not os.path.exists(fqcdir+'/'+passthrough):
-                os.makedirs(fqcdir+'/'+passthrough)
+
             pfqc = rfqc.run_fqc([f1, f2], fqcdir+'/'+passthrough, tmpdir, threads)
             pfqc.wait()
             qcpass, qtrim, atrim, recheck = get_qc(fqcdir+'/'+passthrough,
@@ -113,7 +117,11 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads):
 
         ##If qcpass is still true, then finished succesfully.
         if qcpass:
-            print("Finished successfully")
+            for newfile, orig in zip([f1, f2], infiles):
+                outname = os.path.basename(orig)
+                shutil.copy(newfile, '{0}/Passed_{1}'.format(outdir, outname))
+            print("Finished successfully, files that passed are now available"
+                        "in the specified output directory")
             print(qcpass, qtrim, atrim, recheck)
 
         else:
@@ -128,11 +136,10 @@ if __name__ == "__main__":
     description = ("This script qcconf FastQC output for PASS/WARN/FAIL values")
     args = sqcu.parse_command_line(description)
 
-    args = sqcu.make_paths(args)
     args.files = sqcu.get_files(args)
     args.qcconf = sqcu.get_qcconfig(args.config)
 
     ### Check FastQC output, simple yes/no to quality trimming
     ### Output and resubmission of jobs handled by checkFastQC
     check_qc(args.files, args.fqcdir, args.trimdir, args.tmpdir, args.adaptseq,
-                args.qcconf, args.threads)
+                args.qcconf, args.threads, args.outdir)

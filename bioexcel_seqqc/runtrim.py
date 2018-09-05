@@ -18,8 +18,9 @@ def trimAdapt(infiles, trimdir, adaptseq, threads):
     in1 = infiles[0]
     in2 = infiles[1]
 
-    out1 = "{0}/ATrimmed1.fq".format(trimdir)
-    out2 = "{0}/ATrimmed2.fq".format(trimdir)
+    sqcu.make_paths(trimdir)
+    out1 = "{0}/ATrimmed1.fastq.gz".format(trimdir)
+    out2 = "{0}/ATrimmed2.fastq.gz".format(trimdir)
 
     command = "cutadapt -a {0} -A {0} -o {1} -p {2} -j {3} "\
         "{4} {5}".format(adaptseq, out1, out2, threads, in1, in2)
@@ -43,10 +44,11 @@ def trimQC(infiles, trimdir, threads):
     in1 = infiles[0]
     in2 = infiles[1]
 
-    out1 = "{0}/QCTrimmed1.fq".format(trimdir)
-    out2 = "{0}/QCTrimmed2.fq".format(trimdir)
+    sqcu.make_paths(trimdir)
+    out1 = "{0}/QCTrimmed1.fastq.gz".format(trimdir)
+    out2 = "{0}/QCTrimmed2.fastq.gz".format(trimdir)
 
-    command = "cutadapt -q 20 -o {0} -p {1} --pair-filter=any \
+    command = "cutadapt -q 20 -o {0} -p {1} \
                 -j {2} {3} {4} ".format(out1, out2, threads, in1, in2)
 
     cmdargs = shlex.split(command)
@@ -67,8 +69,9 @@ def trimFull(infiles, trimdir, adaptseq, threads):
     in1 = infiles[0]
     in2 = infiles[1]
 
-    out1 = "{0}/Trimmed1.fq".format(trimdir)
-    out2 = "{0}/Trimmed2.fq".format(trimdir)
+    sqcu.make_paths(trimdir)
+    out1 = "{0}/Trimmed1.fastq.gz".format(trimdir)
+    out2 = "{0}/Trimmed2.fastq.gz".format(trimdir)
 
     command = "cutadapt -q 20 -a {0} -A {0} -o {1} -p {2} \
                 -j {3} {4} {5}".format(adaptseq, out1, out2, threads, in1, in2)
@@ -85,16 +88,18 @@ def trimFull(infiles, trimdir, adaptseq, threads):
 if __name__ == "__main__":
     description = ("This script runs the Trimming step of SeqQC")
     args = sqcu.parse_command_line(description)
-    if args.trim == 'full':
+
+    args.files = sqcu.get_files(args)
+
+    if args.trim == 'F':
         ptrimfull, f1, f2 = trimFull(args.files, args.trimdir, args.adaptseq,
                                         args.threads)
         ptrimfull.wait()
-    if args.trim == 'adapt':
+    if args.trim == 'A':
         ptrimfull, f1, f2 = trimAdapt(args.files, args.trimdir, args.adaptseq,
                                         args.threads)
         ptrimfull.wait()
-    if args.trim == 'qual':
-        ptrimfull, f1, f2 = trimQC(args.files, args.adaptseq,
-                                        args.threads)
+    if args.trim == 'Q':
+        ptrimfull, f1, f2 = trimQC(args.files, args.trimdir, args.threads)
         ptrimfull.wait()
         
