@@ -73,7 +73,7 @@ def parse_command_line(description):
 
     trimgroup = parser.add_argument_group('Individual Trim stage',
         'Additional arguments used when running the trim stage manually '
-        'with: python -m runtrim <args>')
+        'with: python -m bioexcel_seqqc.runtrim <args>')
     trimgroup.add_argument("--trim", type=str, default='full',
                         choices=['F', 'A', 'Q'],
                         help="The type of trimming to be done on the paired "

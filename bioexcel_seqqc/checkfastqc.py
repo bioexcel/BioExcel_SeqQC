@@ -47,27 +47,32 @@ def get_qc(fqcdir, passthrough, qcconf):
             print(splitline)
             status = splitline[0]
             section = splitline[1]
-            sectvars = qcconf[section]
+
+            try:
+                sectvars = qcconf[section]
+                try:
+                    sectvars = sectvars[passthrough]
+                except KeyError:
+                    pass
+
+                try:
+                    statvars = sectvars[status]
+                    if 'qcpass' in statvars:
+                        qcpass = statvars['qcpass']
+                    if 'qtrim' in statvars:
+                        qtrim = statvars['qtrim']
+                    if 'atrim' in statvars:
+                        atrim = statvars['atrim']
+                    if 'recheck' in statvars:
+                        recheck = statvars['recheck']
+                except KeyError:
+                    pass
+            except KeyError:
+                pass
             #qclist.append(splitline[0]) #Store Pass/Warn/Fail in list
 
             # Check for dependance on 1st or 2nd pass through
-            try:
-                sectvars = sectvars[passthrough]
-            except KeyError:
-                pass
-
-            try:
-                statvars = sectvars[status]
-                if 'qcpass' in statvars:
-                    qcpass = statvars['qcpass']
-                if 'qtrim' in statvars:
-                    qtrim = statvars['qtrim']
-                if 'atrim' in statvars:
-                    atrim = statvars['atrim']
-                if 'recheck' in statvars:
-                    recheck = statvars['qcpass']
-            except KeyError:
-                pass
+            
 
     print(qcpass, qtrim, atrim, recheck)
     return qcpass, qtrim, atrim, recheck
@@ -109,7 +114,7 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads,
         if recheck:
             ### Will need work if logic changes to need retrim after pass 2
             passthrough = 'pass2'
-
+            print('Huh?')
             pfqc = rfqc.run_fqc([f1, f2], fqcdir+'/'+passthrough, tmpdir, threads)
             pfqc.wait()
             qcpass, qtrim, atrim, recheck = get_qc(fqcdir+'/'+passthrough,
@@ -120,7 +125,7 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads,
             for newfile, orig in zip([f1, f2], infiles):
                 outname = os.path.basename(orig)
                 shutil.copy(newfile, '{0}/Passed_{1}'.format(outdir, outname))
-            print("Finished successfully, files that passed are now available"
+            print("Finished successfully, files that passed are now available "
                         "in the specified output directory")
             print(qcpass, qtrim, atrim, recheck)
 
