@@ -13,7 +13,7 @@ for scheme in INSTALL_SCHEMES.values():
 setup(
     name='bioexcel_seqqc',
     version='0.2.0',
-    description=('Sequence Quality Control python package'),
+    description=('Sequence Quality Control workflow python package'),
     author='Darren White',
     author_email='d.white@epcc.ed.ac.uk',
     scripts=['bin/bioexcel_seqqc'],

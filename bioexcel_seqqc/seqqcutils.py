@@ -108,7 +108,7 @@ def make_paths(dirpath):
     Create paths required for run of SeqQC pipeline
     """
     if not os.path.exists(dirpath):
-        os.makedirs(dirpath)
+        os.makedirs(dirpath, exist_ok=True)
 
     return
 
