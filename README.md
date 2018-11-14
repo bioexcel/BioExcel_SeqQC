@@ -1,9 +1,11 @@
 # SeqQC
 
+TO BE UPDATED SOON.
+
 Python scripts for a Sequence Quality Control pipeline, based on workflows
 defined by IGMM.
 
-Each tool can be run standalone, or as
+Each tool can be run standalone, or as a whole workflow.
 
 Requirements:
 
