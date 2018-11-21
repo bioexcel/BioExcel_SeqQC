@@ -114,7 +114,7 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads,
         if recheck:
             ### Will need work if logic changes to need retrim after pass 2
             passthrough = 'pass2'
-            print('Huh?')
+            
             pfqc = rfqc.run_fqc([f1, f2], fqcdir+'/'+passthrough, tmpdir, threads)
             pfqc.wait()
             qcpass, qtrim, atrim, recheck = get_qc(fqcdir+'/'+passthrough,
