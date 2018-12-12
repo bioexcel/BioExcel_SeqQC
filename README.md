@@ -63,7 +63,7 @@ $ bioexcel_seqqc -h
 An example of basic usage of the pipeline is:
 
 ```bash
-$ bioexcel_seqqc --files in1.fa in2.fa --threads 4 --outdir ./output
+$ bxcl_seqqc --files in1.fa in2.fa --threads 4 --outdir ./output
 ```
 
 ### Editing configuration for checkFastQC stage
@@ -74,7 +74,7 @@ changed. First, output an example configuration file (which contains the
 default values):
 
 ```bash
-$ bioexcel_seqqc --printconfig
+$ bxcl_seqqc --printconfig
 ```
 
 The file lists the summary outputs from FastQC, and what decisions to make 
@@ -102,4 +102,24 @@ fqc.wait()
 
 trim_process = rt.trimQC(infiles, trimdir, threads):
 trim_process.wait()
+```
+
+## Stages
+
+Our pipeline consists of three main stages: runfastqc, checkfastqc and runtrim. 
+Each stage exists as a python module as shown above. Each module contains 
+specific functions that execute the tools listed. The diagram below shows 
+each of these stages, with colour coding to show which tools are used in each 
+module, as well as useful output files. For this work, the module checkfastqc
+was developed specifically to remove the human intervention required to check 
+output from fastqc before continuing with trimming/further analysis.
+
+![alt text](./BioExcel_SeqQC.png "BioExcel_SeqQC workflow")
+
+Each module can also be executed independently of the main executable workflow. 
+For example, if a situation occurs that causes cutadapt to fail, the runtrim 
+stage can be executed from the command line as 
+
+```bash
+$ python -m bioexcel_align.runtrim <arguments>
 ```

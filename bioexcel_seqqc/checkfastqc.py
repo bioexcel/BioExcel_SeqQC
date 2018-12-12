@@ -72,7 +72,6 @@ def get_qc(fqcdir, passthrough, qcconf):
             #qclist.append(splitline[0]) #Store Pass/Warn/Fail in list
 
             # Check for dependance on 1st or 2nd pass through
-            
 
     print(qcpass, qtrim, atrim, recheck)
     return qcpass, qtrim, atrim, recheck
@@ -114,8 +113,9 @@ def check_qc(infiles, fqcdir, trimdir, tmpdir, adaptseq, qcconf, threads,
         if recheck:
             ### Will need work if logic changes to need retrim after pass 2
             passthrough = 'pass2'
-            
-            pfqc = rfqc.run_fqc([f1, f2], fqcdir+'/'+passthrough, tmpdir, threads)
+
+            pfqc = rfqc.run_fqc([f1, f2], fqcdir+'/'+passthrough, tmpdir,
+                                                                        threads)
             pfqc.wait()
             qcpass, qtrim, atrim, recheck = get_qc(fqcdir+'/'+passthrough,
                                                            passthrough, qcconf)
